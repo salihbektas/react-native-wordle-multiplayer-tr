@@ -1,27 +1,30 @@
 import { useEffect } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router'
-
 
 
 export default function RootLayout() {
 
 
-
-
-
   return (
     <View>
-      <Pressable onPress={() => {
+      <Pressable style={styles.button} onPress={() => {
         router.navigate('singleplayer')
       }}>
         <Text>Single Player</Text>
       </Pressable>
 
-      <Pressable >
+      <Pressable style={styles.button} >
         <Text>Multi Player</Text>
       </Pressable>
       
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    padding: 16,
+    margin: 8
+  }
+})

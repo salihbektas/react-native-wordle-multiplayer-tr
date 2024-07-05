@@ -316,8 +316,9 @@ const styles = StyleSheet.create({
 
   board: {
     maxWidth: 320,
-    flex: 1,
+    width: '100%',
     aspectRatio: 5/6,
+    marginVertical: 'auto',
     justifyContent: 'space-between',
 
   },
