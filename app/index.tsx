@@ -14,7 +14,9 @@ export default function RootLayout() {
         <Text>Single Player</Text>
       </Pressable>
 
-      <Pressable style={styles.button} >
+      <Pressable style={styles.button} onPress={() => {
+        router.navigate('multiplayer')
+      }}>
         <Text>Multi Player</Text>
       </Pressable>
       
