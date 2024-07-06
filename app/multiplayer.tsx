@@ -1,8 +1,7 @@
 import { colors } from "@/constants/Colors"
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native"
-
+import { ActivityIndicator, Pressable, StyleSheet, Text, View, TextInput } from "react-native"
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, get } from "firebase/database";
+import { getDatabase, ref, get, update } from "firebase/database";
 import { useState } from "react";
 
 
@@ -25,13 +24,27 @@ get(dbRef).then((snapshot) => {
 });
 
 export default function multiplayer() {
+  const [playerName, setPlayerName] = useState<string>('')
   const [amIHost, setAmIHost] = useState<boolean>(false)
   const [isLoading, setIsloading] = useState<boolean>(false)
   const [serverList, setServerList] = useState<Record<string, unknown>[]>([])
 
+  function createServer() {
+    const updates: Record<string, unknown> = {};
+    updates[`${playerName} oyun odası`] = {serverName: playerName, isWaiting: true, playerCount: 1};
+    return update(dbRef, updates);
+  }
+
   return(
     <View style={styles.main}>
       <Text style={styles.text}>Multiplayer page</Text>
+
+      <TextInput
+        style={styles.input}
+        onChangeText={setPlayerName}
+        value={playerName}
+        placeholder="oyuncu ismi"
+      />
 
       <Text style={styles.text}>Server List</Text>
 
@@ -45,7 +58,7 @@ export default function multiplayer() {
 
       </View>
 
-      <Pressable style={styles.button} >
+      <Pressable style={styles.button} onPress={createServer}>
         <Text style={styles.buttonText}>Oyun Kur</Text>
       </Pressable>
 
@@ -69,6 +82,16 @@ const styles = StyleSheet.create({
   text: {
     color: colors.white,
     fontSize: 30
+  },
+
+  input:{
+    backgroundColor: colors.darkGray,
+    padding: 8,
+    borderRadius: 8,
+    color: colors.black,
+    fontSize: 30,
+    marginVertical: 4,
+
   },
 
   listContainer:{
