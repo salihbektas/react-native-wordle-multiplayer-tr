@@ -35,6 +35,21 @@ export default function multiplayer() {
     return update(dbRef, updates);
   }
 
+  function refreshServerList() {
+    setIsloading(true)
+    get(dbRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        setServerList(Object.keys(snapshot.val()).filter(item => snapshot.val()[item].isWaiting).map(item => snapshot.val()[item]))
+      } else {
+        console.log("No data available");
+      }
+      setIsloading(false)
+    }).catch((error) => {
+      console.error(error);
+      setIsloading(false)
+    });
+  }
+
   return(
     <View style={styles.main}>
       <Text style={styles.text}>Multiplayer page</Text>
@@ -53,7 +68,11 @@ export default function multiplayer() {
         ? <ActivityIndicator size={'large'} style={styles.loading} color={colors.green} />
         : serverList.length === 0
           ? <Text style={styles.noServerText} >Sunucu Yok</Text>
-          : null
+          : serverList.map((server, index) => 
+            <View key={index} style={styles.listRow} >
+              <Text style={styles.text} >{`${server.serverName}   ${server.playerCount}`}</Text>
+            </View>
+          )
       }
 
       </View>
@@ -62,7 +81,7 @@ export default function multiplayer() {
         <Text style={styles.buttonText}>Oyun Kur</Text>
       </Pressable>
 
-      <Pressable style={styles.button} >
+      <Pressable style={styles.button} onPress={refreshServerList}>
         <Text style={styles.buttonText}>Yenile</Text>
       </Pressable>
     </View>
@@ -100,6 +119,15 @@ const styles = StyleSheet.create({
     padding: 8,
     borderWidth: 2,
     borderColor: colors.lightGray,
+  },
+
+  listRow: {
+    padding: 4,
+    marginVertical: 2,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: colors.lightGray,
+    flexDirection: 'row',
   },
 
   loading: {
