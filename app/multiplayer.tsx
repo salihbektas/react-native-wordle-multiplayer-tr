@@ -1,8 +1,9 @@
 import { colors } from "@/constants/Colors"
-import { ActivityIndicator, Pressable, StyleSheet, Text, View, TextInput } from "react-native"
+import { ActivityIndicator, Pressable, StyleSheet, Text, View, TextInput, Alert, Platform } from "react-native"
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, get, update } from "firebase/database";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { router } from "expo-router";
 
 
 const firebaseConfig = {
@@ -26,13 +27,24 @@ get(dbRef).then((snapshot) => {
 export default function multiplayer() {
   const [playerName, setPlayerName] = useState<string>('')
   const [amIHost, setAmIHost] = useState<boolean>(false)
-  const [isLoading, setIsloading] = useState<boolean>(false)
+  const [isLoading, setIsloading] = useState<boolean>(true)
   const [serverList, setServerList] = useState<Record<string, unknown>[]>([])
 
+  useEffect(() => {
+    refreshServerList()
+  }, [])
+
   function createServer() {
+    if(playerName === ''){
+      Platform.OS === 'web' ? alert('İsim girmediniz. Oda kurmak için isiminiz gerekli.')
+      : Alert.alert('İsim girmediniz','Oda kurmak için isiminiz gerekli.',[{text: 'Tamam'}])
+      return;
+    }
     const updates: Record<string, unknown> = {};
     updates[`${playerName} oyun odası`] = {serverName: playerName, isWaiting: true, playerCount: 1};
-    return update(dbRef, updates);
+    update(dbRef, updates);
+
+    router.navigate('lobby')
   }
 
   function refreshServerList() {
