@@ -4,6 +4,8 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, get, update } from "firebase/database";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
+import { useDispatch } from "react-redux";
+import { makeHost, makePlayer } from "@/features/playerSlice/playerSlice";
 
 
 const firebaseConfig = {
@@ -26,9 +28,9 @@ get(dbRef).then((snapshot) => {
 
 export default function multiplayer() {
   const [playerName, setPlayerName] = useState<string>('')
-  const [amIHost, setAmIHost] = useState<boolean>(false)
   const [isLoading, setIsloading] = useState<boolean>(true)
   const [serverList, setServerList] = useState<Record<string, unknown>[]>([])
+  const dispatch = useDispatch()
 
   useEffect(() => {
     refreshServerList()
@@ -44,6 +46,7 @@ export default function multiplayer() {
     updates[`${playerName} oyun odası`] = {serverName: playerName, isWaiting: true, playerCount: 1};
     update(dbRef, updates);
 
+    dispatch(makeHost())
     router.navigate('lobby')
   }
 

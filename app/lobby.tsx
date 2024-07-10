@@ -1,9 +1,11 @@
 import { colors } from "@/constants/Colors"
+import { RootState } from "@/store/store"
 import { Pressable, StyleSheet, Text, View } from "react-native"
+import { useSelector } from "react-redux"
 
 
 export default function lobby() {
-
+  const amIHost = useSelector((state: RootState) => state.player.amIHost)
 
   return(
     <View style={styles.main}>
@@ -19,12 +21,13 @@ export default function lobby() {
 
       </View>
 
-      <Pressable style={styles.button} onPress={() => {}}>
-        <Text style={styles.buttonText}>Başlat</Text>
-      </Pressable>
+      {amIHost && <Pressable style={styles.button} onPress={() => {}}>
+          <Text style={styles.buttonText}>Başlat</Text>
+        </Pressable>
+      }
 
       <Pressable style={styles.button} onPress={() => {}}>
-        <Text style={styles.buttonText}>Odayı Dağıt</Text>
+        <Text style={styles.buttonText}>{amIHost ? 'Odayı Dağıt' : 'Odadan Ayrıl'}</Text>
       </Pressable>
     </View>
   )
