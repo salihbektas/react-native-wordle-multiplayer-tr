@@ -1,12 +1,19 @@
 import { colors } from "@/constants/Colors"
 import { ActivityIndicator, Pressable, StyleSheet, Text, View, TextInput, Alert, Platform } from "react-native"
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, get, update } from "firebase/database";
+import { getDatabase, ref, get, update, runTransaction } from "firebase/database";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { useDispatch } from "react-redux";
 import { makeHost, makePlayer } from "@/features/playerSlice/playerSlice";
 
+
+type ServerType = {
+  isWaiting: boolean;
+  playerCount: number;
+  serverName: string;
+  playerList: string[];
+}
 
 const firebaseConfig = {
   databaseURL: process.env.EXPO_PUBLIC_API_URL,
@@ -29,7 +36,7 @@ get(dbRef).then((snapshot) => {
 export default function multiplayer() {
   const [playerName, setPlayerName] = useState<string>('')
   const [isLoading, setIsloading] = useState<boolean>(true)
-  const [serverList, setServerList] = useState<Record<string, unknown>[]>([])
+  const [serverList, setServerList] = useState<ServerType[]>([])
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -43,10 +50,29 @@ export default function multiplayer() {
       return;
     }
     const updates: Record<string, unknown> = {};
-    updates[`${playerName} oyun odası`] = {serverName: playerName, isWaiting: true, playerCount: 1};
+    updates[`${playerName} oyun odası`] = {serverName: playerName, isWaiting: true, playerCount: 1, playerList: [playerName]};
     update(dbRef, updates);
 
     dispatch(makeHost())
+    router.navigate('lobby')
+  }
+
+  function joinServer(serverName: string) {
+    if(playerName === ''){
+      Platform.OS === 'web' ? alert('İsim girmediniz. Oyuna katılmak için isiminiz gerekli.')
+      : Alert.alert('İsim girmediniz','Oyuna katılmak için isiminiz gerekli.',[{text: 'Tamam'}])
+      return;
+    }
+
+    runTransaction(ref(getDatabase(app), `/${serverName} oyun odası`), (serverState:ServerType) => {
+      if(serverState){        
+        serverState.playerCount++
+        serverState.playerList.push(playerName)
+      }
+      return serverState;
+    });
+
+    dispatch(makePlayer())
     router.navigate('lobby')
   }
 
@@ -86,6 +112,9 @@ export default function multiplayer() {
           : serverList.map((server, index) => 
             <View key={index} style={styles.listRow} >
               <Text style={styles.text} >{`${server.serverName}   ${server.playerCount}`}</Text>
+              <Pressable style={styles.button} onPress={() => {joinServer(server.serverName)}}>
+                <Text style={styles.buttonText}>Katıl</Text>
+              </Pressable>
             </View>
           )
       }
@@ -143,6 +172,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.lightGray,
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 
   loading: {
