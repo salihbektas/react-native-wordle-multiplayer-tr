@@ -1,11 +1,11 @@
 import { colors } from "@/constants/Colors"
 import { ActivityIndicator, Pressable, StyleSheet, Text, View, TextInput, Alert, Platform } from "react-native"
-import { initializeApp } from "firebase/app";
 import { getDatabase, ref, get, update, runTransaction } from "firebase/database";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { useDispatch } from "react-redux";
 import { makeHost, makePlayer } from "@/features/playerSlice/playerSlice";
+import app from "@/utils/firebase";
 
 
 type ServerType = {
@@ -15,11 +15,6 @@ type ServerType = {
   playerList: string[];
 }
 
-const firebaseConfig = {
-  databaseURL: process.env.EXPO_PUBLIC_API_URL,
-};
-
-const app = initializeApp(firebaseConfig);
 
 const dbRef = ref(getDatabase(app));
 
