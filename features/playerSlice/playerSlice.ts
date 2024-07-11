@@ -1,17 +1,27 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export interface CounterState {
-  amIHost: boolean
+export interface PlayerState {
+  amIHost: boolean;
+  playerName: string;
+  dbRefName: string;
 }
 
-const initialState: CounterState = {
+const initialState: PlayerState = {
   amIHost: false,
+  playerName: '',
+  dbRefName: '',
 }
 
 export const playerSlice = createSlice({
   name: 'player',
   initialState,
   reducers: {
+    addName: (state, action: PayloadAction<string>) => {
+      state.playerName = action.payload
+    },
+    addDBRefName: (state, action: PayloadAction<string>) => {
+      state.dbRefName = action.payload
+    },
     makeHost: (state) => {
       state.amIHost = true
     },
@@ -21,6 +31,6 @@ export const playerSlice = createSlice({
   },
 })
 
-export const { makeHost, makePlayer } = playerSlice.actions
+export const { makeHost, makePlayer, addName, addDBRefName } = playerSlice.actions
 
 export default playerSlice.reducer

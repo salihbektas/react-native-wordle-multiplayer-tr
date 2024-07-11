@@ -4,7 +4,7 @@ import { getDatabase, ref, get, update, runTransaction } from "firebase/database
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { useDispatch } from "react-redux";
-import { makeHost, makePlayer } from "@/features/playerSlice/playerSlice";
+import { addDBRefName, addName, makeHost, makePlayer } from "@/features/playerSlice/playerSlice";
 import app from "@/utils/firebase";
 
 
@@ -46,10 +46,13 @@ export default function multiplayer() {
     }
     const updates: Record<string, unknown> = {};
     updates[`${playerName} oyun odası`] = {serverName: playerName, isWaiting: true, playerCount: 1, playerList: [playerName]};
-    update(dbRef, updates);
-
-    dispatch(makeHost())
-    router.navigate('lobby')
+    update(dbRef, updates)
+    .then(() => {
+      dispatch(makeHost())
+      dispatch(addName(playerName))
+      dispatch(addDBRefName(`/${playerName} oyun odası`))
+      router.navigate('lobby')
+    });
   }
 
   function joinServer(serverName: string) {
@@ -65,10 +68,12 @@ export default function multiplayer() {
         serverState.playerList.push(playerName)
       }
       return serverState;
+    }).then(() => {
+      dispatch(makePlayer())
+      dispatch(addName(playerName))
+      dispatch(addDBRefName(`/${serverName} oyun odası`))
+      router.navigate('lobby')
     });
-
-    dispatch(makePlayer())
-    router.navigate('lobby')
   }
 
   function refreshServerList() {

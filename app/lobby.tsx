@@ -1,11 +1,31 @@
 import { colors } from "@/constants/Colors"
 import { RootState } from "@/store/store"
+import app from "@/utils/firebase"
+import { router } from "expo-router"
+import { getDatabase, onValue, ref } from "firebase/database"
+import { useEffect, useRef, useState } from "react"
 import { Pressable, StyleSheet, Text, View } from "react-native"
 import { useSelector } from "react-redux"
 
 
 export default function lobby() {
-  const amIHost = useSelector((state: RootState) => state.player.amIHost)
+  const {amIHost, playerName, dbRefName} = useSelector((state: RootState) => state.player)
+
+  const [playerList, setPlayerList] = useState<string[]>([])
+
+  useEffect(() => {
+
+    const unsubscribe = onValue(ref(getDatabase(app), dbRefName), snapshot => {
+      if(snapshot.exists()){
+        setPlayerList(snapshot.val().playerList)
+      }
+      else{
+        router.back()
+      }
+    })
+
+    return unsubscribe
+  }, [])
 
   return(
     <View style={styles.main}>
@@ -14,10 +34,13 @@ export default function lobby() {
       <Text style={styles.text}>Oyuncu Listesi</Text>
 
       <View style={styles.listContainer}>
-      {
-        <Text style={styles.text} >Oyuncular...</Text>
-
-      }
+      
+      <Text style={styles.text} >Oyuncular...</Text>
+      {playerList.map((playerName, index) => 
+        <View key={index} style={styles.listRow} >
+          <Text style={styles.text} >{playerName}</Text>
+        </View>
+      )}
 
       </View>
 
