@@ -5,15 +5,7 @@ import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { useDispatch } from "react-redux";
 import { addDBRefName, addName, makeHost, makePlayer } from "@/features/playerSlice/playerSlice";
-import app from "@/utils/firebase";
-
-
-type ServerType = {
-  isWaiting: boolean;
-  playerCount: number;
-  serverName: string;
-  playerList: string[];
-}
+import app, { ServerType } from "@/utils/firebase";
 
 
 const dbRef = ref(getDatabase(app));

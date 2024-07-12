@@ -1,8 +1,8 @@
 import { colors } from "@/constants/Colors"
 import { RootState } from "@/store/store"
-import app from "@/utils/firebase"
+import app, { ServerType } from "@/utils/firebase"
 import { router } from "expo-router"
-import { getDatabase, onValue, ref } from "firebase/database"
+import { getDatabase, off, onValue, ref, remove, runTransaction } from "firebase/database"
 import { useEffect, useRef, useState } from "react"
 import { Pressable, StyleSheet, Text, View } from "react-native"
 import { useSelector } from "react-redux"
@@ -27,6 +27,26 @@ export default function lobby() {
     return unsubscribe
   }, [])
 
+
+  function disconnect() {
+    const dbRef = ref(getDatabase(app), dbRefName)
+    if(amIHost){
+      remove(dbRef)
+    }
+    else{
+      runTransaction(dbRef, (serverState:ServerType) => {
+        if(serverState){        
+          serverState.playerCount--
+          serverState.playerList = serverState.playerList.filter(playerNameOnList => playerName !== playerNameOnList)
+        }
+        return serverState;
+      }).then(() => {
+        off(dbRef)
+        router.back()
+      });
+    }
+  }
+
   return(
     <View style={styles.main}>
       <Text style={styles.text}>Oyun Lobisi</Text>
@@ -49,7 +69,7 @@ export default function lobby() {
         </Pressable>
       }
 
-      <Pressable style={styles.button} onPress={() => {}}>
+      <Pressable style={styles.button} onPress={disconnect}>
         <Text style={styles.buttonText}>{amIHost ? 'Odayı Dağıt' : 'Odadan Ayrıl'}</Text>
       </Pressable>
     </View>
