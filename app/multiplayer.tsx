@@ -74,6 +74,7 @@ export default function multiplayer() {
       if (snapshot.exists()) {
         setServerList(Object.keys(snapshot.val()).filter(item => snapshot.val()[item].isWaiting).map(item => snapshot.val()[item]))
       } else {
+        setServerList([])
         console.log("No data available");
       }
       setIsloading(false)
