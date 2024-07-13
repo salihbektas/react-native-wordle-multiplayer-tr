@@ -1,6 +1,6 @@
 import { colors } from "@/constants/Colors"
 import { ActivityIndicator, Pressable, StyleSheet, Text, View, TextInput, Alert, Platform } from "react-native"
-import { getDatabase, ref, get, update, runTransaction } from "firebase/database";
+import { getDatabase, ref, get, update, runTransaction, onValue } from "firebase/database";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { useDispatch } from "react-redux";
@@ -10,16 +10,6 @@ import app, { ServerType } from "@/utils/firebase";
 
 const dbRef = ref(getDatabase(app));
 
-get(dbRef).then((snapshot) => {
-  if (snapshot.exists()) {
-    console.log(snapshot.val());
-  } else {
-    console.log("No data available");
-  }
-}).catch((error) => {
-  console.error(error);
-});
-
 export default function multiplayer() {
   const [playerName, setPlayerName] = useState<string>('')
   const [isLoading, setIsloading] = useState<boolean>(true)
@@ -27,7 +17,21 @@ export default function multiplayer() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    refreshServerList()
+    const unsubscribe = onValue(ref(getDatabase(app)), (snapshot) => {
+      if (snapshot.exists()) {
+        const newServerList = Object.keys(snapshot.val())
+          .filter(serverName => snapshot.val()[serverName].isWaiting)
+          .map(serverName => snapshot.val()[serverName])
+        setServerList(newServerList);
+      } else {
+        setServerList([]);
+        console.log("No data available");
+      }
+      setIsloading(false)
+    })
+
+    return unsubscribe
+
   }, [])
 
   function createServer() {
