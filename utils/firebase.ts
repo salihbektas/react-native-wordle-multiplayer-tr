@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getDatabase, ref } from "firebase/database";
 
 export type ServerType = {
   isWaiting: boolean;
@@ -13,4 +14,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-export default app;
+const dbRootRef = ref(getDatabase(app))
+
+export default dbRootRef;

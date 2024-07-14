@@ -1,14 +1,12 @@
 import { colors } from "@/constants/Colors"
 import { ActivityIndicator, Pressable, StyleSheet, Text, View, TextInput, Alert, Platform } from "react-native"
-import { getDatabase, ref, get, update, runTransaction, onValue } from "firebase/database";
+import { get, update, runTransaction, onValue, child } from "firebase/database";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { useDispatch } from "react-redux";
 import { addDBRefName, addName, makeHost, makePlayer } from "@/features/playerSlice/playerSlice";
-import app, { ServerType } from "@/utils/firebase";
+import dbRootRef, { ServerType } from "@/utils/firebase";
 
-
-const dbRef = ref(getDatabase(app));
 
 export default function multiplayer() {
   const [playerName, setPlayerName] = useState<string>('')
@@ -17,7 +15,7 @@ export default function multiplayer() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const unsubscribe = onValue(ref(getDatabase(app)), (snapshot) => {
+    const unsubscribe = onValue(dbRootRef, (snapshot) => {
       if (snapshot.exists()) {
         const newServerList = Object.keys(snapshot.val())
           .filter(serverName => snapshot.val()[serverName].isWaiting)
@@ -42,7 +40,7 @@ export default function multiplayer() {
     }
     const updates: Record<string, unknown> = {};
     updates[`${playerName} oyun odası`] = {serverName: playerName, isWaiting: true, playerCount: 1, playerList: [playerName]};
-    update(dbRef, updates)
+    update(dbRootRef, updates)
     .then(() => {
       dispatch(makeHost())
       dispatch(addName(playerName))
@@ -58,7 +56,7 @@ export default function multiplayer() {
       return;
     }
 
-    runTransaction(ref(getDatabase(app), `/${serverName} oyun odası`), (serverState:ServerType) => {
+    runTransaction(child(dbRootRef, `/${serverName} oyun odası`), (serverState:ServerType) => {
       if(serverState){        
         serverState.playerCount++
         serverState.playerList.push(playerName)
@@ -74,7 +72,7 @@ export default function multiplayer() {
 
   function refreshServerList() {
     setIsloading(true)
-    get(dbRef).then((snapshot) => {
+    get(dbRootRef).then((snapshot) => {
       if (snapshot.exists()) {
         setServerList(Object.keys(snapshot.val()).filter(item => snapshot.val()[item].isWaiting).map(item => snapshot.val()[item]))
       } else {

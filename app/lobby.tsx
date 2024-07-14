@@ -1,8 +1,8 @@
 import { colors } from "@/constants/Colors"
 import { RootState } from "@/store/store"
-import app, { ServerType } from "@/utils/firebase"
+import dbRootRef, { ServerType } from "@/utils/firebase"
 import { router } from "expo-router"
-import { getDatabase, off, onValue, ref, remove, runTransaction } from "firebase/database"
+import { child, off, onValue, remove, runTransaction } from "firebase/database"
 import { useEffect, useRef, useState } from "react"
 import { Pressable, StyleSheet, Text, View } from "react-native"
 import { useSelector } from "react-redux"
@@ -15,7 +15,7 @@ export default function lobby() {
 
   useEffect(() => {
 
-    const unsubscribe = onValue(ref(getDatabase(app), dbRefName), snapshot => {
+    const unsubscribe = onValue(child(dbRootRef, dbRefName), snapshot => {
       if(snapshot.exists()){
         setPlayerList(snapshot.val().playerList)
       }
@@ -29,7 +29,7 @@ export default function lobby() {
 
 
   function disconnect() {
-    const dbRef = ref(getDatabase(app), dbRefName)
+    const dbRef = child(dbRootRef, dbRefName)
     if(amIHost){
       remove(dbRef)
     }
