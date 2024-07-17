@@ -2,22 +2,47 @@ import { colors } from "@/constants/Colors"
 import { RootState } from "@/store/store"
 import dbRootRef, { ServerType } from "@/utils/firebase"
 import { router } from "expo-router"
-import { child, off, onValue, remove, runTransaction } from "firebase/database"
+import { child, off, onValue, remove, runTransaction, update } from "firebase/database"
 import { useEffect, useRef, useState } from "react"
 import { Pressable, StyleSheet, Text, View } from "react-native"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import words from '../assets/words.json'
+import { addWords } from "@/features/playerSlice/playerSlice"
 
+
+const defaultConfigs = {
+  time: 180,
+  wordsCount: 5,
+}
 
 export default function lobby() {
-  const {amIHost, playerName, dbRefName} = useSelector((state: RootState) => state.player)
+  const {amIHost, playerName, dbRefName, answers} = useSelector((state: RootState) => state.player)
+  const dispatch = useDispatch()
+
 
   const [playerList, setPlayerList] = useState<string[]>([])
 
   useEffect(() => {
 
+    if(amIHost){
+      let i = 0
+      const tempAnswers: string[] = []
+      do{
+        const item = words[Math.floor(Math.random()*5702)]
+        if(!tempAnswers.some((answer) => {answer === item})){
+          tempAnswers.push(item)
+          ++i
+        }
+      }while(i < defaultConfigs.wordsCount);
+      
+      const updates = {answers: tempAnswers}
+      update(child(dbRootRef, dbRefName), updates)
+    }
+
     const unsubscribe = onValue(child(dbRootRef, dbRefName), snapshot => {
       if(snapshot.exists()){
         setPlayerList(snapshot.val().playerList)
+        dispatch(addWords(snapshot.val().answers))
       }
       else{
         router.back()

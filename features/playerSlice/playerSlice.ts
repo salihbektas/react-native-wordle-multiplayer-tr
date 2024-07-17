@@ -4,12 +4,14 @@ export interface PlayerState {
   amIHost: boolean;
   playerName: string;
   dbRefName: string;
+  answers: string[];
 }
 
 const initialState: PlayerState = {
   amIHost: false,
   playerName: '',
   dbRefName: '',
+  answers: [],
 }
 
 export const playerSlice = createSlice({
@@ -28,9 +30,12 @@ export const playerSlice = createSlice({
     makePlayer: (state) => {
       state.amIHost = false
     },
+    addWords: (state, actionion: PayloadAction<string[]>) => {
+      state.answers = actionion.payload
+    }
   },
 })
 
-export const { makeHost, makePlayer, addName, addDBRefName } = playerSlice.actions
+export const { makeHost, makePlayer, addName, addDBRefName, addWords } = playerSlice.actions
 
 export default playerSlice.reducer
