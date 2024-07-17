@@ -6,7 +6,7 @@ import { child, off, onValue, remove, runTransaction, update } from "firebase/da
 import { useEffect, useRef, useState } from "react"
 import { Pressable, StyleSheet, Text, View } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
-import words from '../assets/words.json'
+import {words, WORDSLENGTH} from '../constants/constants'
 import { addWords } from "@/features/playerSlice/playerSlice"
 
 
@@ -26,16 +26,16 @@ export default function lobby() {
 
     if(amIHost){
       let i = 0
-      const tempAnswers: string[] = []
+      const tempAnswerIndexes: number[] = []
       do{
-        const item = words[Math.floor(Math.random()*5702)]
-        if(!tempAnswers.some((answer) => {answer === item})){
-          tempAnswers.push(item)
+        const answerIndexes = Math.floor(Math.random()*WORDSLENGTH)
+        if(!tempAnswerIndexes.some((answer) => {answer === answerIndexes})){
+          tempAnswerIndexes.push(answerIndexes)
           ++i
         }
       }while(i < defaultConfigs.wordsCount);
       
-      const updates = {answers: tempAnswers}
+      const updates = {answers: tempAnswerIndexes}
       update(child(dbRootRef, dbRefName), updates)
     }
 

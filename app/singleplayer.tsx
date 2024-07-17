@@ -2,15 +2,16 @@ import { Modal, Pressable, StyleSheet, Text, View} from 'react-native';
 import { colors } from '@/constants/Colors';
 import Game from '@/components/Game';
 import { useState } from 'react';
+import { WORDSLENGTH } from '@/constants/constants';
 
 
 export default function App() {
 
-  const [wordIndex, setWordIndex] = useState(Math.floor(Math.random()*5702))
+  const [wordIndex, setWordIndex] = useState(Math.floor(Math.random()*WORDSLENGTH))
   const [isPlaying, setIsPlaying] = useState(true)
 
   function onPressNext(){
-    setWordIndex(Math.floor(Math.random()*5702))
+    setWordIndex(Math.floor(Math.random()*WORDSLENGTH))
     setIsPlaying(true)
   }
 

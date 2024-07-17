@@ -3,7 +3,7 @@ import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Animated, {useSharedValue, useAnimatedStyle, withTiming, withSequence, withDelay} from 'react-native-reanimated'
 import { colors } from '@/constants/Colors';
-import words from '../assets/words.json'
+import { words, WORDSLENGTH } from '../constants/constants'
 import useInterval from 'use-interval';
 
 
@@ -36,7 +36,7 @@ const letters=[
 function random() {
   let result = []
   for (let i = 0; i < 6; ++i) {
-    result.push(words[Math.floor(Math.random()*5702)])
+    result.push(words[Math.floor(Math.random()*WORDSLENGTH)])
   }
   return result
 }
