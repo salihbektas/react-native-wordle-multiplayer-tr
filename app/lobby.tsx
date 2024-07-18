@@ -22,6 +22,12 @@ export default function lobby() {
 
   const [playerList, setPlayerList] = useState<string[]>([])
 
+
+  function start() {
+    const updates = {isWaiting: false}
+    update(child(dbRootRef, dbRefName), updates)
+  }
+
   useEffect(() => {
 
     if(amIHost){
@@ -41,8 +47,13 @@ export default function lobby() {
 
     const unsubscribe = onValue(child(dbRootRef, dbRefName), snapshot => {
       if(snapshot.exists()){
-        setPlayerList(snapshot.val().playerList)
-        dispatch(addWords(snapshot.val().answers))
+        const data = snapshot.val()
+        setPlayerList(data.playerList)
+        dispatch(addWords(data.answers))
+        
+        if(!data.isWaiting){
+          router.navigate('multiplayer')
+        }
       }
       else{
         router.back()
@@ -89,9 +100,13 @@ export default function lobby() {
 
       </View>
 
-      {amIHost && <Pressable style={styles.button} onPress={() => {}}>
-          <Text style={styles.buttonText}>Başlat</Text>
-        </Pressable>
+      {amIHost && (playerList.length > 1
+        ? <Pressable style={styles.button} onPress={start}>
+            <Text style={styles.buttonText}>Başlat</Text>
+          </Pressable>
+        : <Pressable style={styles.passiveButton} onPress={() => {}}>
+            <Text style={styles.buttonText}>Başlat</Text>
+          </Pressable>)
       }
 
       <Pressable style={styles.button} onPress={disconnect}>
@@ -135,6 +150,13 @@ const styles = StyleSheet.create({
 
   button: {
     backgroundColor: colors.white,
+    padding: 8,
+    borderRadius: 8,
+    marginTop: 8,
+  },
+
+  passiveButton: {
+    backgroundColor: colors.darkGray,
     padding: 8,
     borderRadius: 8,
     marginTop: 8,
