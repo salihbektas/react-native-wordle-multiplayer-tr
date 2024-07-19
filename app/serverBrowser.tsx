@@ -46,7 +46,7 @@ export default function serverBrowser() {
       isWaiting: true,
       playerCount: 1,
       playerList: [playerName],
-      turn: 1,
+      turn: 0,
       results:result
     };
     update(dbRootRef, updates)

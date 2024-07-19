@@ -4,7 +4,7 @@ import Game from '@/components/Game';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { child, onValue, runTransaction, update } from 'firebase/database';
+import { child, increment, onValue, runTransaction, update } from 'firebase/database';
 import dbRootRef, { ServerType } from '@/utils/firebase';
 import { router } from 'expo-router';
 import { increaseTurn } from '@/features/playerSlice/playerSlice';
@@ -60,7 +60,11 @@ export default function multiplayer() {
 
   function onPressNext(){
     if(amIHost){
-      const updates = {turn: turn+1}
+      if(turn === 4){
+        //TODO: end game
+        return
+      }
+      const updates = {turn: increment(1)}
       update(child(dbRootRef, dbRefName), updates)
     }
 

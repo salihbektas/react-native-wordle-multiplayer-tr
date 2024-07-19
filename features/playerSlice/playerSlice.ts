@@ -13,7 +13,7 @@ const initialState: PlayerState = {
   playerName: '',
   dbRefName: '',
   answers: [],
-  turn: 1,
+  turn: 0,
 }
 
 export const playerSlice = createSlice({
