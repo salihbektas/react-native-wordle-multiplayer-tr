@@ -29,6 +29,7 @@ export default function multiplayer() {
         if(data.turn > turn){
           dispatch(increaseTurn(data.turn))
           setIsPlaying(true)
+          setTime(180)
         }
       }
       else{
