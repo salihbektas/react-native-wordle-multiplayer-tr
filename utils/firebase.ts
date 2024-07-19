@@ -6,6 +6,8 @@ export type ServerType = {
   playerCount: number;
   serverName: string;
   playerList: string[];
+  turn: number;
+  results: Record<string, [number,number]>
 }
 
 const firebaseConfig = {

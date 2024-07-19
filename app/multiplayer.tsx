@@ -4,8 +4,8 @@ import Game from '@/components/Game';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { child, onValue, update } from 'firebase/database';
-import dbRootRef from '@/utils/firebase';
+import { child, onValue, runTransaction, update } from 'firebase/database';
+import dbRootRef, { ServerType } from '@/utils/firebase';
 import { router } from 'expo-router';
 import { increaseTurn } from '@/features/playerSlice/playerSlice';
 
@@ -17,6 +17,8 @@ export default function multiplayer() {
 
   const [wordIndex, setWordIndex] = useState(0)
   const [isPlaying, setIsPlaying] = useState(true)
+  const [attempts, setAttempts] = useState(0)
+  const [time, setTime] = useState(180)
 
   useEffect(() => {
 
@@ -24,8 +26,10 @@ export default function multiplayer() {
       if(snapshot.exists()){
         const data = snapshot.val()
         setWordIndex(answers[data.turn])
-        dispatch(increaseTurn(data.turn))
-
+        if(data.turn > turn){
+          dispatch(increaseTurn(data.turn))
+          setIsPlaying(true)
+        }
       }
       else{
         router.navigate('serverBrowser')
@@ -35,13 +39,30 @@ export default function multiplayer() {
     return unsubscribe
   }, [])
 
+  useEffect(() => {
+    if(!isPlaying){
+      const resutl: [number, number] = [-1, -1]
+      if(time > 0 && attempts < 5){
+        resutl[0] = attempts+1
+        resutl[1] = 180-time
+      }
+
+      runTransaction(child(dbRootRef, dbRefName), (serverState:ServerType) => {
+        const update: Record<string, [number,number]> = {}
+        update[`${playerName}`] = resutl
+        serverState.results = {...serverState.results, ...update }
+
+        return serverState
+      })
+    }
+  }, [isPlaying])
+
   function onPressNext(){
     if(amIHost){
       const updates = {turn: turn+1}
       update(child(dbRootRef, dbRefName), updates)
     }
 
-    setIsPlaying(true)
   }
 
 
@@ -54,7 +75,14 @@ export default function multiplayer() {
           </Pressable>
         </View>
       </Modal>
-      <Game key={wordIndex} isPlaying={isPlaying} answerIndex={wordIndex} setIsPlaying={setIsPlaying}/>
+      <Game key={wordIndex} 
+        isPlaying={isPlaying}
+        setIsPlaying={setIsPlaying}
+        answerIndex={wordIndex}
+        time={time}
+        setTime={setTime}
+        setAttempts={setAttempts}
+      />
     </View>
   )
 }

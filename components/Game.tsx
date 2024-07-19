@@ -44,10 +44,26 @@ const answer = random()
 console.log(answer)
 
 
-export default function Game({answerIndex, isPlaying, setIsPlaying}: {answerIndex: number, isPlaying: boolean, setIsPlaying: (param:boolean) => void}) {
+type propType = {
+  answerIndex: number;
+  isPlaying: boolean;
+  setIsPlaying: (param:boolean) => void;
+  time: number;
+  setTime: (param: (param: number) => number) => void;
+  setAttempts: (param: number) => void;
+}
+
+export default function Game({
+  answerIndex,
+  isPlaying,
+  setIsPlaying,
+  time,
+  setTime,
+  setAttempts
+}: propType) {
   
   const [state, setState] = useState<StateType>({data: ['','','','','',''],colors:[['black','black','black','black','black'],['black','black','black','black','black'],['black','black','black','black','black'],['black','black','black','black','black'],['black','black','black','black','black'],['black','black','black','black','black']], row: 0})
-  const [time, setTime] = useState(180)
+
   const [grayLetters, setGrayLetters] = useState<string[]>([])
   const [yellowLetters, setYellowLetters] = useState<string[]>([])
   const [greenLetters, setGreenLetters] = useState<string[]>([])
@@ -165,6 +181,7 @@ export default function Game({answerIndex, isPlaying, setIsPlaying}: {answerInde
         newState.row += 1
 
       setState(newState)
+      setAttempts(newState.row)
 
       if(newState.row > 5){
         setIsPlaying(false)

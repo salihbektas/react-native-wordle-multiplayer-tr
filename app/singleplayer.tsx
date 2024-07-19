@@ -9,6 +9,8 @@ export default function App() {
 
   const [wordIndex, setWordIndex] = useState(Math.floor(Math.random()*WORDSLENGTH))
   const [isPlaying, setIsPlaying] = useState(true)
+  const [attempts, setAttempts] = useState(0)
+  const [time, setTime] = useState(180)
 
   function onPressNext(){
     setWordIndex(Math.floor(Math.random()*WORDSLENGTH))
@@ -25,7 +27,14 @@ export default function App() {
           </Pressable>
         </View>
       </Modal>
-      <Game key={wordIndex} isPlaying={isPlaying} answerIndex={wordIndex} setIsPlaying={setIsPlaying}/>
+      <Game key={wordIndex} 
+        isPlaying={isPlaying}
+        setIsPlaying={setIsPlaying}
+        answerIndex={wordIndex}
+        time={time}
+        setTime={setTime}
+        setAttempts={setAttempts}
+      />
     </View>
   )
 }

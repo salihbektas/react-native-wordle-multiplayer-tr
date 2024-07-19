@@ -74,6 +74,7 @@ export default function lobby() {
         if(serverState){        
           serverState.playerCount--
           serverState.playerList = serverState.playerList.filter(playerNameOnList => playerName !== playerNameOnList)
+          delete serverState.results[playerName]
         }
         return serverState;
       }).then(() => {

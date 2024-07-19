@@ -38,13 +38,16 @@ export default function serverBrowser() {
       : Alert.alert('İsim girmediniz','Oda kurmak için isiminiz gerekli.',[{text: 'Tamam'}])
       return;
     }
+    const result: Record<string, [number, number]> = {}
+    result[`${playerName}`] = [0, 0]
     const updates: Record<string, unknown> = {};
     updates[`${playerName} oyun odası`] = {
       serverName: playerName,
       isWaiting: true,
       playerCount: 1,
       playerList: [playerName],
-      turn: 0,
+      turn: 1,
+      results:result
     };
     update(dbRootRef, updates)
     .then(() => {
@@ -66,6 +69,9 @@ export default function serverBrowser() {
       if(serverState){        
         serverState.playerCount++
         serverState.playerList.push(playerName)
+        const update: Record<string, [number,number]> = {}
+        update[`${playerName}`] = [0,0]
+        serverState.results = {...serverState.results, ...update }
       }
       return serverState;
     }).then(() => {
