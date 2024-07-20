@@ -46,7 +46,7 @@ export default function multiplayer() {
   useEffect(() => {
     if(!isPlaying){
       const resutl: [number, number] = [-1, -1]
-      if(time > 0 && attempts < 5){
+      if(time > 0 && attempts < 6){
         resutl[0] = attempts+1
         resutl[1] = 180-time
       }
