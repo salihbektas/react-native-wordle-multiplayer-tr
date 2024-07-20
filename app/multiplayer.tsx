@@ -15,18 +15,21 @@ export default function multiplayer() {
   const {amIHost, playerName, dbRefName, answers, turn} = useSelector((state: RootState) => state.player)
   const dispatch = useDispatch()
 
-  const [wordIndex, setWordIndex] = useState(0)
+  const [wordIndex, setWordIndex] = useState(answers[0])
   const [isPlaying, setIsPlaying] = useState(true)
   const [attempts, setAttempts] = useState(0)
   const [time, setTime] = useState(180)
+  const [results, setResults] = useState<Record<string, [number,number]>>({})
 
   useEffect(() => {
 
     const unsubscribe = onValue(child(dbRootRef, dbRefName), snapshot => {
       if(snapshot.exists()){
-        const data = snapshot.val()
-        setWordIndex(answers[data.turn])
-        if(data.turn > turn){
+        const data: ServerType = snapshot.val()
+
+        setResults(data.results)
+        if(data.playerList.every(player => data.results[player][0] === 0)){
+          setWordIndex(answers[data.turn])
           dispatch(increaseTurn(data.turn))
           setIsPlaying(true)
           setTime(180)
@@ -64,7 +67,9 @@ export default function multiplayer() {
         //TODO: end game
         return
       }
-      const updates = {turn: increment(1)}
+      const initialResults = {...results}
+      Object.keys(results).forEach(player => initialResults[player] = [0,0])
+      const updates = {turn: increment(1), results: initialResults}
       update(child(dbRootRef, dbRefName), updates)
     }
 
@@ -72,9 +77,24 @@ export default function multiplayer() {
 
 
   return (
-    <View>
+    <View style={styles.main}>
       <Modal visible={!isPlaying} animationType='fade' transparent={true}>
         <View style={styles.modal}>
+          <View style={styles.list}>
+            {
+              Object.keys(results)
+                .filter(player => results[player][0] !== 0 && results[player][1] !== 0)
+                .map(player => {
+                  if(results[player][0] === -1){
+                    return <Text key={player} style={styles.letter} >{`${player}: Başarısız `}</Text>
+                  }
+                  return <Text key={player} style={styles.letter} >
+                    {`${player}: ${results[player][0]} \\ ${results[player][1]}`}
+                  </Text>
+                  }
+                )
+            }
+          </View>
           <Pressable style={styles.next} onPress={onPressNext}>
             <Text style={styles.letter}>Sıradaki</Text>
           </Pressable>
@@ -94,25 +114,33 @@ export default function multiplayer() {
 
 const styles = StyleSheet.create({
 
-  modal:{
+  main: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  },
+
+  modal:{
+    width: '75%',
+    height: '75%',
+    margin: 'auto',
+    backgroundColor: colors.darkGray,
+    borderRadius: 16,
+  },
+  
+  list: {
+    flex: 9,
+    marginHorizontal: 'auto',
+    paddingTop: 8,
   },
 
   next:{
-    width: '75%',
-    height: '75%',
-    backgroundColor: colors.darkGray,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center'
+    flex: 1,
+    alignItems: 'center'
   },
 
   letter: {
     color: colors.white,
     fontWeight : '600',
-    fontSize: 12
+    fontSize: 30
   },
 
 });
