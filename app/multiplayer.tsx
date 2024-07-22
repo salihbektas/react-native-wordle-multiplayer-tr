@@ -20,6 +20,7 @@ export default function multiplayer() {
   const [attempts, setAttempts] = useState(0)
   const [time, setTime] = useState(180)
   const [results, setResults] = useState<Record<string, [number,number]>>({})
+  const [points, setPoints] = useState<Record<string, number>>({})
 
   useEffect(() => {
 
@@ -27,6 +28,7 @@ export default function multiplayer() {
       if(snapshot.exists()){
         const data: ServerType = snapshot.val()
 
+        setPoints(data.points)
         setResults(data.results)
         if(data.playerList.every(player => data.results[player][0] === 0)){
           setWordIndex(answers[data.turn])
@@ -67,9 +69,29 @@ export default function multiplayer() {
         //TODO: end game
         return
       }
-      const initialResults = {...results}
-      Object.keys(results).forEach(player => initialResults[player] = [0,0])
-      const updates = {turn: increment(1), results: initialResults}
+
+      const playerlist = Object.keys(results)
+
+      const newPoints = {...points}
+
+      playerlist.forEach(player => {
+        if(results[player][0] !== -1){
+          let order = 1
+          playerlist.forEach(player2 => {
+            if(player !== player2 && results[player2][0] !== -1 && results[player][0] > results[player2][0]){
+              ++order
+            }
+            else if(player !== player2 && results[player2][0] !== -1 && results[player][0] === results[player2][0] && results[player][1] > results[player2][1]){
+              ++order
+            }
+          })
+          newPoints[player] += playerlist.length -order +1
+        }
+      })
+
+      const newResults = {...results}
+      playerlist.forEach(player => newResults[player] = [0,0])
+      const updates = {turn: increment(1), results: newResults, points: newPoints}
       update(child(dbRootRef, dbRefName), updates)
     }
 

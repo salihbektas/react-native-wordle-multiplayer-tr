@@ -38,6 +38,8 @@ export default function serverBrowser() {
       : Alert.alert('İsim girmediniz','Oda kurmak için isiminiz gerekli.',[{text: 'Tamam'}])
       return;
     }
+    const points: Record<string, number> = {}
+    points[playerName] = 0
     const result: Record<string, [number, number]> = {}
     result[`${playerName}`] = [0, 0]
     const updates: Record<string, unknown> = {};
@@ -47,7 +49,8 @@ export default function serverBrowser() {
       playerCount: 1,
       playerList: [playerName],
       turn: 0,
-      results:result
+      results:result,
+      points
     };
     update(dbRootRef, updates)
     .then(() => {
@@ -72,6 +75,7 @@ export default function serverBrowser() {
         const update: Record<string, [number,number]> = {}
         update[`${playerName}`] = [0,0]
         serverState.results = {...serverState.results, ...update }
+        serverState.points[playerName] = 0
       }
       return serverState;
     }).then(() => {
