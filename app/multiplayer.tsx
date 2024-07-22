@@ -9,11 +9,14 @@ import dbRootRef, { ServerType } from '@/utils/firebase';
 import { router } from 'expo-router';
 import { increaseTurn } from '@/features/playerSlice/playerSlice';
 
+type Tab = 'results' | 'scors';
 
 export default function multiplayer() {
 
   const {amIHost, playerName, dbRefName, answers, turn} = useSelector((state: RootState) => state.player)
   const dispatch = useDispatch()
+
+  const [activeTab, setActiveTab] = useState<Tab>('results')
 
   const [wordIndex, setWordIndex] = useState(answers[0])
   const [isPlaying, setIsPlaying] = useState(true)
@@ -102,19 +105,36 @@ export default function multiplayer() {
     <View style={styles.main}>
       <Modal visible={!isPlaying} animationType='fade' transparent={true}>
         <View style={styles.modal}>
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <Pressable 
+              style={[styles.tab, {backgroundColor: activeTab === 'results' ? colors.green : colors.black, borderTopLeftRadius: 16}]}
+              onPress={() => setActiveTab('results')}>
+                <Text style={styles.tabText}>Sonuçlar</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.tab, {backgroundColor: activeTab === 'results' ? colors.green : colors.black, borderTopRightRadius: 16}]}
+              onPress={() => setActiveTab('scors')}>
+                <Text style={styles.tabText}>Puanlar</Text>
+            </Pressable>
+          </View>
           <View style={styles.list}>
             {
-              Object.keys(results)
-                .filter(player => results[player][0] !== 0 && results[player][1] !== 0)
-                .map(player => {
-                  if(results[player][0] === -1){
-                    return <Text key={player} style={styles.letter} >{`${player}: Başarısız `}</Text>
-                  }
-                  return <Text key={player} style={styles.letter} >
-                    {`${player}: ${results[player][0]} \\ ${results[player][1]}`}
-                  </Text>
-                  }
-                )
+              activeTab === 'results' 
+                ? Object.keys(results)
+                    .filter(player => results[player][0] !== 0 && results[player][1] !== 0)
+                    .map(player => {
+                      if(results[player][0] === -1){
+                        return <Text key={player} style={styles.letter} >{`${player}: Başarısız `}</Text>
+                      }
+                      return <Text key={player} style={styles.letter} >
+                        {`${player}: ${results[player][0]} \\ ${results[player][1]}`}
+                      </Text>
+                      }
+                    )
+                : Object.keys(points)
+                    .map(player => <Text key={player} style={styles.letter} >
+                      {`${player}: ${points[player]}`}
+                    </Text>)
             }
           </View>
           <Pressable style={styles.next} onPress={onPressNext}>
@@ -147,9 +167,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.darkGray,
     borderRadius: 16,
   },
+
+  tab: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+
+  tabText: {
+    color: colors.white,
+    fontWeight : '600',
+    fontSize: 30,
+    marginHorizontal: 'auto',
+  },
   
   list: {
-    flex: 9,
+    flex: 8,
     marginHorizontal: 'auto',
     paddingTop: 8,
   },
