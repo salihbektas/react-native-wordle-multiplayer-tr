@@ -2,27 +2,28 @@ import { Modal, Pressable, StyleSheet, Text, View} from 'react-native';
 import { colors } from '@/constants/Colors';
 import Game from '@/components/Game';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { child, increment, onValue, runTransaction, update } from 'firebase/database';
 import dbRootRef, { ServerType } from '@/utils/firebase';
 import { router } from 'expo-router';
-import { increaseTurn } from '@/features/playerSlice/playerSlice';
 
 type Tab = 'results' | 'scors';
 
 export default function multiplayer() {
 
-  const {amIHost, playerName, dbRefName, answers, turn} = useSelector((state: RootState) => state.player)
-  const dispatch = useDispatch()
+  const {amIHost, playerName, dbRefName, answers} = useSelector((state: RootState) => state.player)
 
+  const [turn, setTurn] = useState(0)
   const [activeTab, setActiveTab] = useState<Tab>('results')
 
-  const [wordIndex, setWordIndex] = useState(answers[0])
+  const wordIndex = answers[turn]
   const [isPlaying, setIsPlaying] = useState(true)
   const [attempts, setAttempts] = useState(0)
   const [time, setTime] = useState(180)
-  const [results, setResults] = useState<Record<string, [number,number]>>({})
+
+  //TODO: initial results
+  const [results, setResults] = useState<Record<string, [number,number]>>({initial: [0,0]})
   const [points, setPoints] = useState<Record<string, number>>({})
 
   useEffect(() => {
@@ -30,15 +31,8 @@ export default function multiplayer() {
     const unsubscribe = onValue(child(dbRootRef, dbRefName), snapshot => {
       if(snapshot.exists()){
         const data: ServerType = snapshot.val()
-
         setPoints(data.points)
         setResults(data.results)
-        if(data.playerList.every(player => data.results[player][0] === 0)){
-          setWordIndex(answers[data.turn])
-          dispatch(increaseTurn(data.turn))
-          setIsPlaying(true)
-          setTime(180)
-        }
       }
       else{
         router.navigate('serverBrowser')
@@ -47,6 +41,12 @@ export default function multiplayer() {
 
     return unsubscribe
   }, [])
+
+  useEffect(() => {
+    if(Object.keys(results).every(player => results[player][0] !== 0)){
+      setTimeout(onPressNext, 5000)
+    }
+  }, [results])
 
   useEffect(() => {
     if(!isPlaying){
@@ -97,7 +97,9 @@ export default function multiplayer() {
       const updates = {turn: increment(1), results: newResults, points: newPoints}
       update(child(dbRootRef, dbRefName), updates)
     }
-
+    setTurn(t => t+1)
+    setTime(180)
+    setIsPlaying(true)
   }
 
 
@@ -105,14 +107,14 @@ export default function multiplayer() {
     <View style={styles.main}>
       <Modal visible={!isPlaying} animationType='fade' transparent={true}>
         <View style={styles.modal}>
-          <View style={{flex: 1, flexDirection: 'row'}}>
+          <View style={styles.tabContainer}>
             <Pressable 
               style={[styles.tab, {backgroundColor: activeTab === 'results' ? colors.green : colors.black, borderTopLeftRadius: 16}]}
               onPress={() => setActiveTab('results')}>
                 <Text style={styles.tabText}>Sonuçlar</Text>
             </Pressable>
             <Pressable
-              style={[styles.tab, {backgroundColor: activeTab === 'results' ? colors.green : colors.black, borderTopRightRadius: 16}]}
+              style={[styles.tab, {backgroundColor: activeTab === 'scors' ? colors.green : colors.black, borderTopRightRadius: 16}]}
               onPress={() => setActiveTab('scors')}>
                 <Text style={styles.tabText}>Puanlar</Text>
             </Pressable>
@@ -137,9 +139,6 @@ export default function multiplayer() {
                     </Text>)
             }
           </View>
-          <Pressable style={styles.next} onPress={onPressNext}>
-            <Text style={styles.letter}>Sıradaki</Text>
-          </Pressable>
         </View>
       </Modal>
       <Game key={wordIndex} 
@@ -173,6 +172,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
+  tabContainer: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+
   tabText: {
     color: colors.white,
     fontWeight : '600',
@@ -181,14 +185,9 @@ const styles = StyleSheet.create({
   },
   
   list: {
-    flex: 8,
+    flex: 9,
     marginHorizontal: 'auto',
     paddingTop: 8,
-  },
-
-  next:{
-    flex: 1,
-    alignItems: 'center'
   },
 
   letter: {

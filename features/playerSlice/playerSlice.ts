@@ -5,7 +5,6 @@ export interface PlayerState {
   playerName: string;
   dbRefName: string;
   answers: number[];
-  turn: number;
 }
 
 const initialState: PlayerState = {
@@ -13,7 +12,6 @@ const initialState: PlayerState = {
   playerName: '',
   dbRefName: '',
   answers: [],
-  turn: 0,
 }
 
 export const playerSlice = createSlice({
@@ -35,12 +33,9 @@ export const playerSlice = createSlice({
     addWords: (state, action: PayloadAction<number[]>) => {
       state.answers = action.payload
     },
-    increaseTurn: (state, action: PayloadAction<number>) => {
-      state.turn = action.payload
-    }
   },
 })
 
-export const { makeHost, makePlayer, addName, addDBRefName, addWords, increaseTurn } = playerSlice.actions
+export const { makeHost, makePlayer, addName, addDBRefName, addWords,} = playerSlice.actions
 
 export default playerSlice.reducer
