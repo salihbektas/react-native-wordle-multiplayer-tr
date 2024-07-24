@@ -1,4 +1,4 @@
-import { Modal, Pressable, StyleSheet, Text, View} from 'react-native';
+import { Dimensions, Modal, Pressable, StyleSheet, Text, View} from 'react-native';
 import { colors } from '@/constants/Colors';
 import Game from '@/components/Game';
 import { useEffect, useState } from 'react';
@@ -7,6 +7,7 @@ import { RootState } from '@/store/store';
 import { child, increment, onValue, runTransaction, update } from 'firebase/database';
 import dbRootRef, { ServerType } from '@/utils/firebase';
 import { router } from 'expo-router';
+import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 
 type Tab = 'results' | 'scors';
 
@@ -25,6 +26,8 @@ export default function multiplayer() {
   //TODO: initial results
   const [results, setResults] = useState<Record<string, [number,number]>>({initial: [0,0]})
   const [points, setPoints] = useState<Record<string, number>>({})
+
+  const width = useSharedValue(Dimensions.get('window').width *0.75);
 
   useEffect(() => {
 
@@ -45,6 +48,7 @@ export default function multiplayer() {
   useEffect(() => {
     if(Object.keys(results).every(player => results[player][0] !== 0)){
       setTimeout(onPressNext, 5000)
+      width.value = withTiming(0, {duration:5000, easing: Easing.linear})
     }
   }, [results])
 
@@ -63,6 +67,9 @@ export default function multiplayer() {
 
         return serverState
       })
+    }
+    else{
+      setTimeout(() => {width.value = Dimensions.get('window').width *0.75}, 2000)
     }
   }, [isPlaying])
 
@@ -139,6 +146,7 @@ export default function multiplayer() {
                     </Text>)
             }
           </View>
+          <Animated.View style={{flex: 1, width, backgroundColor: colors.green}} />
         </View>
       </Modal>
       <Game key={wordIndex} 
@@ -164,7 +172,8 @@ const styles = StyleSheet.create({
     height: '75%',
     margin: 'auto',
     backgroundColor: colors.darkGray,
-    borderRadius: 16,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
 
   tab: {
@@ -185,7 +194,7 @@ const styles = StyleSheet.create({
   },
   
   list: {
-    flex: 9,
+    flex: 8,
     marginHorizontal: 'auto',
     paddingTop: 8,
   },
