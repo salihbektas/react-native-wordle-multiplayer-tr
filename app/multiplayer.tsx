@@ -13,7 +13,7 @@ type Tab = 'results' | 'scors';
 
 export default function multiplayer() {
 
-  const {amIHost, playerName, dbRefName, answers} = useSelector((state: RootState) => state.player)
+  const {amIHost, playerName, dbRefName, answers, numberOfGame} = useSelector((state: RootState) => state.player)
 
   const [turn, setTurn] = useState(0)
   const [activeTab, setActiveTab] = useState<Tab>('results')
@@ -136,7 +136,7 @@ export default function multiplayer() {
                         return <Text key={player} style={styles.letter} >{`${player}: Başarısız `}</Text>
                       }
                       return <Text key={player} style={styles.letter} >
-                        {`${player}: ${results[player][0]} \\ ${results[player][1]}`}
+                        {`${player}: ${results[player][0]} / ${results[player][1]}`}
                       </Text>
                       }
                     )
@@ -146,6 +146,7 @@ export default function multiplayer() {
                     </Text>)
             }
           </View>
+          <Text style={styles.feedbackText}>{`${turn+1} / ${numberOfGame}`}</Text>
           <Animated.View style={{flex: 1, width, backgroundColor: colors.green}} />
         </View>
       </Modal>
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
   },
 
   tabContainer: {
-    flex: 1,
+    flex: 2,
     flexDirection: 'row',
   },
 
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
   },
   
   list: {
-    flex: 8,
+    flex: 15,
     marginHorizontal: 'auto',
     paddingTop: 8,
   },
@@ -204,5 +205,13 @@ const styles = StyleSheet.create({
     fontWeight : '600',
     fontSize: 30
   },
+
+  feedbackText: {
+    flex:2,
+    marginHorizontal: 'auto',
+    color: colors.white,
+    fontWeight : '600',
+    fontSize: 30,
+  }
 
 });

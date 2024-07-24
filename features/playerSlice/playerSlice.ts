@@ -5,6 +5,7 @@ export interface PlayerState {
   playerName: string;
   dbRefName: string;
   answers: number[];
+  numberOfGame: number;
 }
 
 const initialState: PlayerState = {
@@ -12,6 +13,7 @@ const initialState: PlayerState = {
   playerName: '',
   dbRefName: '',
   answers: [],
+  numberOfGame: 5,
 }
 
 export const playerSlice = createSlice({
