@@ -74,12 +74,12 @@ export default function multiplayer() {
   }, [isPlaying])
 
   function onPressNext(){
+    if(turn === 4){
+      //TODO: end game
+      return
+    }
+    
     if(amIHost){
-      if(turn === 4){
-        //TODO: end game
-        return
-      }
-
       const playerlist = Object.keys(results)
 
       const newPoints = {...points}
