@@ -75,7 +75,7 @@ export default function multiplayer() {
 
   function onPressNext(){
     if(turn === 4){
-      //TODO: end game
+      router.navigate('final')
       return
     }
     
