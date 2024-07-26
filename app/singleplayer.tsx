@@ -19,7 +19,7 @@ export default function App() {
 
 
   return (
-    <View>
+    <View style={styles.main}>
       <Modal visible={!isPlaying} animationType='fade' transparent={true}>
         <View style={styles.modal}>
           <Pressable style={styles.next} onPress={onPressNext}>
@@ -40,6 +40,10 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+
+  main: {
+    flex: 1,
+  },
 
   modal:{
     flex: 1,
