@@ -3,10 +3,10 @@ import { RootState } from "@/store/store"
 import dbRootRef, { ServerType } from "@/utils/firebase"
 import { router } from "expo-router"
 import { child, off, onValue, remove, runTransaction, update } from "firebase/database"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { Pressable, StyleSheet, Text, View } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
-import {words, WORDSLENGTH} from '../constants/constants'
+import { WORDSLENGTH} from '../constants/constants'
 import { addWords } from "@/features/playerSlice/playerSlice"
 
 
@@ -16,7 +16,7 @@ const defaultConfigs = {
 }
 
 export default function lobby() {
-  const {amIHost, playerName, dbRefName, answers} = useSelector((state: RootState) => state.player)
+  const {amIHost, playerName, dbRefName} = useSelector((state: RootState) => state.player)
   const dispatch = useDispatch()
 
 

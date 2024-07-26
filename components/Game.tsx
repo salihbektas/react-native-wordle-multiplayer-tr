@@ -3,7 +3,7 @@ import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Animated, {useSharedValue, useAnimatedStyle, withTiming, withSequence, withDelay} from 'react-native-reanimated'
 import { colors } from '@/constants/Colors';
-import { words, WORDSLENGTH } from '../constants/constants'
+import { words } from '../constants/constants'
 import useInterval from 'use-interval';
 
 
@@ -33,15 +33,7 @@ const letters=[
   ['A','S','D','F','G','H','J','K','L','Ş','İ'],
   ['ENTER','Z','C','V','B','N','M','Ö','Ç','DEL']
 ]
-function random() {
-  let result = []
-  for (let i = 0; i < 6; ++i) {
-    result.push(words[Math.floor(Math.random()*WORDSLENGTH)])
-  }
-  return result
-}
-const answer = random()
-console.log(answer)
+
 
 
 type propType = {
@@ -68,8 +60,6 @@ export default function Game({
   const [yellowLetters, setYellowLetters] = useState<string[]>([])
   const [greenLetters, setGreenLetters] = useState<string[]>([])
 
-
-  
   useInterval(() => {
     if(time > -2){
       setTime(t => t-1)
@@ -204,7 +194,6 @@ export default function Game({
     }
   }
 
-console.log(time)
 
   return (
     <View style={styles.container}>

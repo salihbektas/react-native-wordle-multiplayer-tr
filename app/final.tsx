@@ -3,7 +3,7 @@ import { colors } from '@/constants/Colors';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { child, get, onValue, remove, runTransaction, update } from 'firebase/database';
+import { child, get, remove } from 'firebase/database';
 import dbRootRef, { ServerType } from '@/utils/firebase';
 import { router } from 'expo-router';
 import { words } from '@/constants/constants';
@@ -11,7 +11,7 @@ import { words } from '@/constants/constants';
 
 export default function multiplayer() {
 
-  const {amIHost, playerName, dbRefName, answers, numberOfGame} = useSelector((state: RootState) => state.player)
+  const {amIHost, playerName, dbRefName, answers} = useSelector((state: RootState) => state.player)
 
 
   const [points, setPoints] = useState<Record<string, number>>({})
