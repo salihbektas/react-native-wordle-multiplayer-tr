@@ -46,7 +46,27 @@ export default function multiplayer() {
   }, [])
 
   useEffect(() => {
-    if(Object.keys(results).every(player => results[player][0] !== 0)){
+    const playerlist = Object.keys(results)
+    if(playerlist.every(player => results[player][0] !== 0)){
+
+      const newPoints = {...points}
+
+      playerlist.forEach(player => {
+        if(results[player][0] !== -1){
+          let order = 1
+          playerlist.forEach(player2 => {
+            if(player !== player2 && results[player2][0] !== -1 && results[player][0] > results[player2][0]){
+              ++order
+            }
+            else if(player !== player2 && results[player2][0] !== -1 && results[player][0] === results[player2][0] && results[player][1] > results[player2][1]){
+              ++order
+            }
+          })
+          newPoints[player] += playerlist.length -order +1
+        }
+      })
+      setPoints(newPoints)
+      
       setTimeout(onPressNext, 5000)
       width.value = withTiming(0, {duration:5000, easing: Easing.linear})
     }
