@@ -141,6 +141,7 @@ export default function multiplayer() {
                       }
                     )
                 : Object.keys(points)
+                    .sort((p1, p2) => points[p2] - points[p1])
                     .map(player => <Text key={player} style={styles.letter} >
                       {`${player}: ${points[player]}`}
                     </Text>)

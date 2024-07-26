@@ -50,6 +50,7 @@ export default function multiplayer() {
         <Text style={styles.letter}>Puanlar  </Text>
         {
           Object.keys(points)
+            .sort((p1, p2) => points[p2] - points[p1])
             .map(player => {
               return player === playerName ?
               <Text key={player} style={styles.selfLetter} >
