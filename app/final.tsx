@@ -3,7 +3,7 @@ import { colors } from '@/constants/Colors';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { child, onValue, runTransaction, update } from 'firebase/database';
+import { child, get, onValue, remove, runTransaction, update } from 'firebase/database';
 import dbRootRef, { ServerType } from '@/utils/firebase';
 import { router } from 'expo-router';
 import { words } from '@/constants/constants';
@@ -21,22 +21,19 @@ export default function multiplayer() {
   },[answers])
 
   function onPressMenu() {
+    if(amIHost){
+      remove(child(dbRootRef, dbRefName))
+    }
     router.navigate('')
   }
 
   useEffect(() => {
-
-    const unsubscribe = onValue(child(dbRootRef, dbRefName), snapshot => {
+    get(child(dbRootRef, dbRefName)).then(snapshot => {
       if(snapshot.exists()){
         const data: ServerType = snapshot.val()
         setPoints(data.points)
       }
-      else{
-        router.navigate('serverBrowser')
-      }
     })
-
-    return unsubscribe
   }, [])
 
   return (
