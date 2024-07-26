@@ -104,6 +104,7 @@ export default function multiplayer() {
       const updates = {turn: increment(1), results: newResults, points: newPoints}
       update(child(dbRootRef, dbRefName), updates)
     }
+    setActiveTab('results')
     setTurn(t => t+1)
     setTime(180)
     setIsPlaying(true)
