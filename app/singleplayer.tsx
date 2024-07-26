@@ -15,6 +15,7 @@ export default function App() {
   function onPressNext(){
     setWordIndex(Math.floor(Math.random()*WORDSLENGTH))
     setIsPlaying(true)
+    setTime(180)
   }
 
 

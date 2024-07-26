@@ -64,12 +64,14 @@ export default function Game({
     if(time > -2){
       setTime(t => t-1)
     }
+    else{
+      setIsPlaying(false)
+    }
     if(time === 0){
       Toast.show({
         text1: `Kelime: ${words[answerIndex]}`,
         autoHide: true,
         visibilityTime : 2000,
-        onHide: () => {setIsPlaying(false)}
       })
       
     }  
