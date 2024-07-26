@@ -132,19 +132,31 @@ export default function multiplayer() {
                 ? Object.keys(results)
                     .filter(player => results[player][0] !== 0 && results[player][1] !== 0)
                     .map(player => {
+                      let text: string;
                       if(results[player][0] === -1){
-                        return <Text key={player} style={styles.letter} >{`${player}: Başarısız `}</Text>
+                        text = `${player}: Başarısız `
                       }
-                      return <Text key={player} style={styles.letter} >
-                        {`${player}: ${results[player][0]} / ${results[player][1]}`}
-                      </Text>
+                      else{
+                        text = `${player}: ${results[player][0]} / ${results[player][1]}`
+                      }
+                      return player === playerName ? 
+                        <Text key={player} style={styles.selfLetter} >{text}</Text>
+                        : 
+                        <Text key={player} style={styles.letter} >{text}</Text>
                       }
                     )
                 : Object.keys(points)
                     .sort((p1, p2) => points[p2] - points[p1])
-                    .map(player => <Text key={player} style={styles.letter} >
+                    .map(player => {
+                      return player === playerName ?
+                      <Text key={player} style={styles.selfLetter} >
+                        {`${player}: ${points[player]}`}
+                      </Text>
+                      :
+                      <Text key={player} style={styles.letter} >
                       {`${player}: ${points[player]}`}
-                    </Text>)
+                      </Text>
+                    })
             }
           </View>
           <Text style={styles.feedbackText}>{`${turn+1} / ${numberOfGame}`}</Text>
@@ -203,6 +215,12 @@ const styles = StyleSheet.create({
 
   letter: {
     color: colors.white,
+    fontWeight : '600',
+    fontSize: 30
+  },
+
+  selfLetter: {
+    color: colors.green,
     fontWeight : '600',
     fontSize: 30
   },
