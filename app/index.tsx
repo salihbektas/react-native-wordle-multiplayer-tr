@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 'auto',
     marginBottom: 200,
     fontSize: 24,
-    fontWeight: 600,
+    fontWeight: '600',
   },
 
   button: {
