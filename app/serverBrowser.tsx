@@ -104,7 +104,7 @@ export default function serverBrowser() {
 
   return(
     <View style={styles.main}>
-      <Text style={styles.text}>Multiplayer page</Text>
+      <Text style={styles.text}>Çok Oyuncu</Text>
 
       <TextInput
         style={styles.input}
@@ -113,7 +113,7 @@ export default function serverBrowser() {
         placeholder="oyuncu ismi"
       />
 
-      <Text style={styles.text}>Server List</Text>
+      <Text style={styles.text}>Sunucu Listesi</Text>
 
       <View style={styles.listContainer}>
       {isLoading 
