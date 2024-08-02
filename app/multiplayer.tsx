@@ -94,11 +94,6 @@ export default function multiplayer() {
   }, [isPlaying])
 
   function onPressNext(){
-    if(turn === 4){
-      router.navigate('final')
-      return
-    }
-    
     if(amIHost){
       const playerlist = Object.keys(results)
 
@@ -124,6 +119,12 @@ export default function multiplayer() {
       const updates = {turn: increment(1), results: newResults, points: newPoints}
       update(child(dbRootRef, dbRefName), updates)
     }
+
+    if(turn === 4){
+      router.navigate('final')
+      return
+    }
+
     setActiveTab('results')
     setTurn(t => t+1)
     setTime(180)
