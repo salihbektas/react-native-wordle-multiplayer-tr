@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Animated, {useSharedValue, useAnimatedStyle, withTiming, withSequence, withDelay} from 'react-native-reanimated'
 import { colors } from '@/constants/Colors';
@@ -303,12 +303,10 @@ const styles = StyleSheet.create({
   },
 
   board: {
-    maxWidth: 320,
-    width: '100%',
-    aspectRatio: 5/6,
+    width: Dimensions.get('screen').width *0.8,
+    height: Dimensions.get('screen').width *0.96,
     marginVertical: 'auto',
-    justifyContent: 'space-between',
-
+    justifyContent: 'space-between'
   },
 
   boardRow: {
@@ -323,9 +321,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    height: 200,
     width: '100%',
     maxWidth: 500,
+    aspectRatio: 5/2
   },
 
   keyboardRow: {
