@@ -61,13 +61,11 @@ export default function Game({
   const [greenLetters, setGreenLetters] = useState<string[]>([])
 
   useInterval(() => {
-    if(time > -2){
-      setTime(t => t-1)
-    }
-    else{
+
+    setTime(t => t-1)
+
+    if(time === 1 && isPlaying){
       setIsPlaying(false)
-    }
-    if(time === 0){
       Toast.show({
         text1: `Kelime: ${words[answerIndex]}`,
         autoHide: true,
@@ -75,7 +73,7 @@ export default function Game({
       })
       
     }  
-  },  isPlaying ? 1000 : null)
+  },  time > 0 ? 1000 : null)
 
   useEffect(() => {
     function keyDownHandler(e: KeyboardEvent) {
