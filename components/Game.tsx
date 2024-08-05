@@ -61,6 +61,7 @@ export default function Game({
     if(time === 1 && isPlaying){
       setIsPlaying(false)
       Toast.show({
+        type: 'error',
         text1: `Kelime: ${words[answerIndex]}`,
         autoHide: true,
         visibilityTime : 2000,
@@ -86,6 +87,7 @@ export default function Game({
 
     if(!words.some((word: string) => word === state.data[state.row])){
       Toast.show({
+        type: 'info',
         text1: 'Kelime Yok',
         visibilityTime: 2000
       })
@@ -146,6 +148,7 @@ export default function Game({
       if(newState.row > 5){
         setIsPlaying(false)
         Toast.show({
+          type: 'error',
           text1: `Kelime: ${words[answerIndex]}`,
           visibilityTime: 2000,
         })
