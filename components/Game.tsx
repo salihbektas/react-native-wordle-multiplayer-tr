@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
-import { Dimensions, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Animated, {useSharedValue, useAnimatedStyle, withTiming, withSequence, withDelay} from 'react-native-reanimated'
 import { colors } from '@/constants/Colors';
 import { words } from '../constants/constants'
 import useInterval from 'use-interval';
+import Keyboard from './Keyboard';
 
 
 type TileColors = 'black' | 'yellow' | 'lightGray' | 'darkGray' | 'green'
@@ -27,13 +28,6 @@ const BoxStyle = (color: TileColors) => {
     alignItems: 'center'
   }})
 }
-
-const letters=[
-  ['E','R','T','Y','U','I','O','P','Ğ','Ü'],
-  ['A','S','D','F','G','H','J','K','L','Ş','İ'],
-  ['ENTER','Z','C','V','B','N','M','Ö','Ç','DEL']
-]
-
 
 
 type propType = {
@@ -74,30 +68,6 @@ export default function Game({
       
     }  
   },  time > 0 ? 1000 : null)
-
-  useEffect(() => {
-    function keyDownHandler(e: KeyboardEvent) {
-      e.preventDefault();
-      const key = e.key === 'ı' ? 'I' : e.key === 'i' ? 'İ' : e.key.toUpperCase()
-      
-      if(key === 'ENTER'){
-        onPressEnter()
-      }
-      else if(key === 'BACKSPACE'){
-        onPressDel()
-      }
-      else if(letters[0].includes(key) || letters[1].includes(key) || letters[2].includes(key)){
-        onPressLetter(key)
-      }
-    }
-
-    Platform.OS === 'web' && document.addEventListener("keydown", keyDownHandler);
-
-    return () => {
-      Platform.OS === 'web' && document.removeEventListener("keydown", keyDownHandler);
-    };
-  }, [state]);
-
 
   function onPressLetter(letter: string) {
     if(!isPlaying)
@@ -217,26 +187,14 @@ export default function Game({
         })}
       </View>
 
-      <View style={styles.keyboard}>
-        <View style={styles.keyboardRow}>
-          {letters[0].map(item => <Pressable style={[styles.letterBox, {backgroundColor: greenLetters.includes(item) ? colors.green : yellowLetters.includes(item) ? colors.yellow : grayLetters.includes(item) ? colors.darkGray : colors.lightGray}]} onPress={() => onPressLetter(item)} key={item} ><Text style={styles.letter} selectable={false}>{item}</Text></Pressable>)}
-        </View>
-        <View style={[styles.keyboardRow,{width: '93%'}]}>
-          {letters[1].map(item => <Pressable style={[styles.letterBox, {backgroundColor: greenLetters.includes(item) ? colors.green : yellowLetters.includes(item) ? colors.yellow : grayLetters.includes(item) ? colors.darkGray : colors.lightGray}]} onPress={() => onPressLetter(item)} key={item} ><Text style={styles.letter} selectable={false}>{item}</Text></Pressable>)}
-        </View>
-        <View style={styles.keyboardRow}>
-          {letters[2].map(item => {
-            if(item === 'ENTER')
-              return <Pressable style={[styles.letterBox, {flex: 3}]} onPress={onPressEnter} key={item} ><Text style={styles.letter} selectable={false}>{item}</Text></Pressable>
-            if(item === 'DEL')
-              return <Pressable style={[styles.letterBox, {flex: 3}]} onPress={onPressDel} key={item} ><Text style={styles.letter} selectable={false}>{item}</Text></Pressable>
-            
-            return <Pressable style={[styles.letterBox, {backgroundColor: greenLetters.includes(item) ? colors.green : yellowLetters.includes(item) ? colors.yellow : grayLetters.includes(item) ? colors.darkGray : colors.lightGray}]} onPress={() => onPressLetter(item)} key={item} ><Text style={styles.letter} selectable={false}>{item}</Text></Pressable>
-          })
-            
-          }
-        </View>
-      </View>
+      <Keyboard 
+        onPressDel={onPressDel}
+        onPressEnter={onPressEnter}
+        onPressLetter={onPressLetter}
+        greenLetters={greenLetters}
+        yellowLetters={yellowLetters}
+        grayLetters={grayLetters}
+      />
 
     </View>
   );
@@ -312,34 +270,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     height: '16%',
-  },
-
-  keyboard:{
-    marginTop: 4,
-    paddingHorizontal: 8,
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    width: '100%',
-    maxWidth: 500,
-    aspectRatio: 5/2
-  },
-
-  keyboardRow: {
-    flexDirection: 'row',
-    height: '33%',
-    width: '100%',
-    gap: 6,
-    justifyContent: 'space-around',
-    alignItems: 'center'
-  },
-
-  letterBox:{
-    height: '90%',
-    flex: 2,
-    borderRadius: 4,
-    backgroundColor: colors.lightGray,
-    alignItems: 'center',
-    justifyContent: 'center'
   },
 
   letter: {
