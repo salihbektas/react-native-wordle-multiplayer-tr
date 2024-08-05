@@ -301,8 +301,8 @@ const styles = StyleSheet.create({
   },
 
   board: {
-    width: Dimensions.get('screen').width *0.8,
-    height: Dimensions.get('screen').width *0.96,
+    width: Platform.OS === 'web' ? Dimensions.get('screen').height *0.45 :  Dimensions.get('screen').width *0.8,
+    height: Platform.OS === 'web' ? Dimensions.get('screen').height *0.6 : Dimensions.get('screen').width *0.96,
     marginVertical: 'auto',
     justifyContent: 'space-between'
   },
