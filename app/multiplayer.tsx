@@ -52,13 +52,13 @@ export default function multiplayer() {
       const newPoints = {...points}
 
       playerlist.forEach(player => {
-        if(results[player][0] !== -1){
+        if(results[player][1] !== -1){
           let order = 1
           playerlist.forEach(player2 => {
-            if(player !== player2 && results[player2][0] !== -1 && results[player][0] > results[player2][0]){
+            if(player !== player2 && results[player2][1] !== -1 && results[player][1] > results[player2][1]){
               ++order
             }
-            else if(player !== player2 && results[player2][0] !== -1 && results[player][0] === results[player2][0] && results[player][1] > results[player2][1]){
+            else if(player !== player2 && results[player2][0] !== -1 && results[player][1] === results[player2][1] && results[player][0] > results[player2][0]){
               ++order
             }
           })
@@ -100,13 +100,13 @@ export default function multiplayer() {
       const newPoints = {...points}
 
       playerlist.forEach(player => {
-        if(results[player][0] !== -1){
+        if(results[player][1] !== -1){
           let order = 1
           playerlist.forEach(player2 => {
-            if(player !== player2 && results[player2][0] !== -1 && results[player][0] > results[player2][0]){
+            if(player !== player2 && results[player2][1] !== -1 && results[player][1] > results[player2][1]){
               ++order
             }
-            else if(player !== player2 && results[player2][0] !== -1 && results[player][0] === results[player2][0] && results[player][1] > results[player2][1]){
+            else if(player !== player2 && results[player2][0] !== -1 && results[player][1] === results[player2][1] && results[player][0] > results[player2][0]){
               ++order
             }
           })
