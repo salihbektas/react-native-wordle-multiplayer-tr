@@ -11,6 +11,12 @@ import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reani
 
 type Tab = 'results' | 'scors';
 
+function formatTime(param: number) {
+  return param % 60 < 10 
+    ? `${Math.floor(param/60)}:0${param%60}`
+    : `${Math.floor(param/60)}:${param%60}`
+}
+
 export default function multiplayer() {
 
   const {amIHost, playerName, dbRefName, answers, numberOfGame} = useSelector((state: RootState) => state.player)
@@ -159,7 +165,7 @@ export default function multiplayer() {
                         text = `${player}: Başarısız `
                       }
                       else{
-                        text = `${player}: ${results[player][0]} / ${results[player][1]}`
+                        text = `${player}: ${results[player][0]} / ${formatTime(results[player][1])}`
                       }
                       return player === playerName ? 
                         <Text key={player} style={styles.selfLetter} >{text}</Text>
