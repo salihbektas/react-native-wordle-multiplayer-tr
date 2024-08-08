@@ -1,6 +1,6 @@
 import { colors } from "@/constants/Colors";
 import { useEffect } from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native"
+import { Platform, StyleSheet, Text, View, TouchableOpacity } from "react-native"
 
 
 const letters=[
@@ -53,19 +53,19 @@ export default function Keyboard({
   return(
     <View style={styles.keyboard}>
         <View style={styles.keyboardRow}>
-          {letters[0].map(item => <Pressable style={[styles.letterBox, {backgroundColor: greenLetters.includes(item) ? colors.green : yellowLetters.includes(item) ? colors.yellow : grayLetters.includes(item) ? colors.darkGray : colors.lightGray}]} onPress={() => onPressLetter(item)} key={item} ><Text style={styles.letter} selectable={false}>{item}</Text></Pressable>)}
+          {letters[0].map(item => <TouchableOpacity style={[styles.letterBox, {backgroundColor: greenLetters.includes(item) ? colors.green : yellowLetters.includes(item) ? colors.yellow : grayLetters.includes(item) ? colors.darkGray : colors.lightGray}]} onPress={() => onPressLetter(item)} key={item} ><Text style={styles.letter} selectable={false}>{item}</Text></TouchableOpacity>)}
         </View>
         <View style={[styles.keyboardRow,{width: '93%'}]}>
-          {letters[1].map(item => <Pressable style={[styles.letterBox, {backgroundColor: greenLetters.includes(item) ? colors.green : yellowLetters.includes(item) ? colors.yellow : grayLetters.includes(item) ? colors.darkGray : colors.lightGray}]} onPress={() => onPressLetter(item)} key={item} ><Text style={styles.letter} selectable={false}>{item}</Text></Pressable>)}
+          {letters[1].map(item => <TouchableOpacity style={[styles.letterBox, {backgroundColor: greenLetters.includes(item) ? colors.green : yellowLetters.includes(item) ? colors.yellow : grayLetters.includes(item) ? colors.darkGray : colors.lightGray}]} onPress={() => onPressLetter(item)} key={item} ><Text style={styles.letter} selectable={false}>{item}</Text></TouchableOpacity>)}
         </View>
         <View style={styles.keyboardRow}>
           {letters[2].map(item => {
             if(item === 'ENTER')
-              return <Pressable style={[styles.letterBox, {flex: 3}]} onPress={onPressEnter} key={item} ><Text style={styles.letter} selectable={false}>{item}</Text></Pressable>
+              return <TouchableOpacity style={[styles.letterBox, {flex: 3}]} onPress={onPressEnter} key={item} ><Text style={styles.letter} selectable={false}>{item}</Text></TouchableOpacity>
             if(item === 'DEL')
-              return <Pressable style={[styles.letterBox, {flex: 3}]} onPress={onPressDel} key={item} ><Text style={styles.letter} selectable={false}>{item}</Text></Pressable>
+              return <TouchableOpacity style={[styles.letterBox, {flex: 3}]} onPress={onPressDel} key={item} ><Text style={styles.letter} selectable={false}>{item}</Text></TouchableOpacity>
             
-            return <Pressable style={[styles.letterBox, {backgroundColor: greenLetters.includes(item) ? colors.green : yellowLetters.includes(item) ? colors.yellow : grayLetters.includes(item) ? colors.darkGray : colors.lightGray}]} onPress={() => onPressLetter(item)} key={item} ><Text style={styles.letter} selectable={false}>{item}</Text></Pressable>
+            return <TouchableOpacity style={[styles.letterBox, {backgroundColor: greenLetters.includes(item) ? colors.green : yellowLetters.includes(item) ? colors.yellow : grayLetters.includes(item) ? colors.darkGray : colors.lightGray}]} onPress={() => onPressLetter(item)} key={item} ><Text style={styles.letter} selectable={false}>{item}</Text></TouchableOpacity>
           })
             
           }
