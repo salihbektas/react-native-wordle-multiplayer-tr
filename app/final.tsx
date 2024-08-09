@@ -40,10 +40,10 @@ export default function multiplayer() {
 
   return (
     <View style={styles.main}>
-      <View style={{alignItems: 'flex-start'}}>
-      <Pressable style={{backgroundColor: colors.white, paddingBottom: 4, paddingHorizontal: 8, borderRadius: 30}} onPress={onPressMenu}>
-        <Text style={styles.backText}>{'< Menüye Dön '}</Text>
-      </Pressable>
+      <View style={styles.top}>
+        <Pressable style={styles.button} onPress={onPressMenu}>
+          <Text style={styles.backText}>{'< Menüye Dön '}</Text>
+        </Pressable>
       </View>
       <View style={styles.pointList}>
         <Text style={styles.letter}>Puanlar  </Text>
@@ -77,6 +77,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.black,
     padding: 16,
+  },
+
+  top: {alignItems: 'flex-start'},
+
+  button: {
+    backgroundColor: colors.white,
+    paddingBottom: 4,
+    paddingHorizontal: 8,
+    borderRadius: 8
   },
 
   pointList: {
