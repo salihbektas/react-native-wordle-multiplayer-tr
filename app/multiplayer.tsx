@@ -73,8 +73,8 @@ export default function multiplayer() {
       })
       setPoints(newPoints)
       
-      setTimeout(onPressNext, 5000)
-      width.value = withTiming(0, {duration:5000, easing: Easing.linear})
+      setTimeout(onPressNext, 8000)
+      width.value = withTiming(0, {duration:8000, easing: Easing.linear})
     }
   }, [results])
 
