@@ -35,7 +35,7 @@ type propType = {
   isPlaying: boolean;
   setIsPlaying: (param:boolean) => void;
   time: number;
-  setTime: (param: (param: number) => number) => void;
+  setTime: (param: number | ((param: number) => number) ) => void;
   setAttempts: (param: number) => void;
 }
 
@@ -53,10 +53,11 @@ export default function Game({
   const [grayLetters, setGrayLetters] = useState<string[]>([])
   const [yellowLetters, setYellowLetters] = useState<string[]>([])
   const [greenLetters, setGreenLetters] = useState<string[]>([])
+  const [now, setNow] = useState(Date.now)
 
   useInterval(() => {
 
-    setTime(t => t-1)
+    setTime(180 - Math.trunc((Date.now() - now)/1000))
 
     if(time === 1 && isPlaying){
       setIsPlaying(false)
