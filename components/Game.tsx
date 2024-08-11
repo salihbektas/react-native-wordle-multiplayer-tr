@@ -64,7 +64,7 @@ export default function Game({
         type: 'error',
         text1: `Kelime: ${words[answerIndex]}`,
         autoHide: true,
-        visibilityTime : 2000,
+        visibilityTime : 4000,
       })
       
     }  
@@ -89,7 +89,7 @@ export default function Game({
       Toast.show({
         type: 'info',
         text1: 'Kelime Yok',
-        visibilityTime: 2000
+        visibilityTime: 4000
       })
       return
     }
@@ -136,7 +136,7 @@ export default function Game({
         setIsPlaying(false)
         Toast.show({
           text1: 'Tebrikler',
-          visibilityTime: 2000,
+          visibilityTime: 4000,
         })
       }
       else
@@ -150,7 +150,7 @@ export default function Game({
         Toast.show({
           type: 'error',
           text1: `Kelime: ${words[answerIndex]}`,
-          visibilityTime: 2000,
+          visibilityTime: 4000,
         })
       }
     }
