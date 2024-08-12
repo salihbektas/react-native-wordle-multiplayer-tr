@@ -101,13 +101,10 @@ export default function lobby() {
 
       </View>
 
-      {amIHost && (playerList.length > 1
-        ? <Pressable style={styles.button} onPress={start}>
+      {amIHost && 
+          <Pressable style={[styles.button, playerList.length < 2 && {backgroundColor:  colors.darkGray}]} onPress={start} disabled={playerList.length < 2}>
             <Text style={styles.buttonText}>Başlat</Text>
           </Pressable>
-        : <Pressable style={styles.passiveButton} onPress={() => {}}>
-            <Text style={styles.buttonText}>Başlat</Text>
-          </Pressable>)
       }
 
       <Pressable style={styles.button} onPress={disconnect}>
@@ -151,13 +148,6 @@ const styles = StyleSheet.create({
 
   button: {
     backgroundColor: colors.white,
-    padding: 8,
-    borderRadius: 8,
-    marginTop: 8,
-  },
-
-  passiveButton: {
-    backgroundColor: colors.darkGray,
     padding: 8,
     borderRadius: 8,
     marginTop: 8,
