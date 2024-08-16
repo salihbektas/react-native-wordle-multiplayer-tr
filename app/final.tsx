@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View} from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import { colors } from '@/constants/Colors';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -42,7 +42,8 @@ export default function multiplayer() {
     <View style={styles.main}>
       <View style={styles.top}>
         <Pressable style={styles.button} onPress={onPressMenu}>
-          <Text style={styles.backText}>{'< Menüye Dön '}</Text>
+          <Image source={require('../assets/images/back.png')} style={styles.icon} />
+          <Text style={styles.backText}>{'Menüye Dön '}</Text>
         </Pressable>
       </View>
       <View style={styles.pointList}>
@@ -83,9 +84,18 @@ const styles = StyleSheet.create({
 
   button: {
     backgroundColor: colors.white,
+    flexDirection: 'row',
     paddingBottom: 4,
     paddingHorizontal: 8,
     borderRadius: 8
+  },
+
+  icon: {
+    resizeMode: 'contain',
+    height: 24,
+    width: 24,
+    marginTop: 3,
+    tintColor: colors.black,
   },
 
   pointList: {
