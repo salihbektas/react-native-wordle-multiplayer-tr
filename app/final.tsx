@@ -24,7 +24,7 @@ export default function multiplayer() {
     if(amIHost){
       remove(child(dbRootRef, dbRefName))
     }
-    router.navigate('')
+    router.navigate('./')
   }
 
   useEffect(() => {

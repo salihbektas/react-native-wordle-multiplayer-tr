@@ -44,7 +44,7 @@ export default function multiplayer() {
         setResults(data.results)
       }
       else{
-        router.navigate('serverBrowser')
+        router.navigate('./serverBrowser')
       }
     })
 
@@ -127,7 +127,7 @@ export default function multiplayer() {
     }
 
     if(turn === 4){
-      router.navigate('final')
+      router.navigate('./final')
       return
     }
 

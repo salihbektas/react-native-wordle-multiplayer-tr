@@ -52,7 +52,7 @@ export default function lobby() {
         dispatch(addWords(data.answers))
         
         if(!data.isWaiting){
-          router.navigate('multiplayer')
+          router.navigate('./multiplayer')
         }
       }
       else{

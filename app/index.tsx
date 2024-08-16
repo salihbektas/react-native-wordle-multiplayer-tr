@@ -9,12 +9,12 @@ export default function RootLayout() {
   return (
     <View style={styles.main}>
       <Text style={styles.heading}>WORDLE TÜRKÇE</Text>
-      <Link href='singleplayer' asChild>
+      <Link href='./singleplayer' asChild>
         <Pressable style={styles.button}>
           <Text style={styles.buttonText} >Tek Kişilik</Text>
         </Pressable>
       </Link>
-      <Link href='serverBrowser' asChild>
+      <Link href='./serverBrowser' asChild>
         <Pressable style={styles.button}>
           <Text style={styles.buttonText} >Çok Kişilik</Text>
         </Pressable>

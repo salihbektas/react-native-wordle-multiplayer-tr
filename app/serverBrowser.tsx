@@ -57,7 +57,7 @@ export default function serverBrowser() {
       dispatch(makeHost())
       dispatch(addName(playerName))
       dispatch(addDBRefName(`/${playerName} oyun odası`))
-      router.navigate('lobby')
+      router.navigate('./lobby')
     });
   }
 
@@ -82,7 +82,7 @@ export default function serverBrowser() {
       dispatch(makePlayer())
       dispatch(addName(playerName))
       dispatch(addDBRefName(`/${serverName} oyun odası`))
-      router.navigate('lobby')
+      router.navigate('./lobby')
     });
   }
 
