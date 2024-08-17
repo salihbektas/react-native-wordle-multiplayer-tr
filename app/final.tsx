@@ -3,7 +3,7 @@ import { colors } from '@/constants/Colors';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { child, onValue, remove } from 'firebase/database';
+import { child, off, onValue, remove } from 'firebase/database';
 import dbRootRef, { ServerType } from '@/utils/firebase';
 import { router } from 'expo-router';
 import { words } from '@/constants/constants';
@@ -32,6 +32,9 @@ export default function multiplayer() {
       if(snapshot.exists()){
         const data: ServerType = snapshot.val()
         setPoints(data.points)
+      }
+      else{
+        off(child(dbRootRef, dbRefName))
       }
     })
 
