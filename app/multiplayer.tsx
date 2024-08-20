@@ -28,8 +28,6 @@ export default function multiplayer() {
   const [isPlaying, setIsPlaying] = useState(true)
   const [attempts, setAttempts] = useState(0)
   const [time, setTime] = useState(180)
-
-  //TODO: initial results
   const [results, setResults] = useState<Record<string, [number,number]>>({initial: [0,0]})
   const [points, setPoints] = useState<Record<string, number>>({})
 
