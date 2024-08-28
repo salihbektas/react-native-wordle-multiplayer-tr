@@ -1,11 +1,11 @@
-import { Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import { BackHandler, Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import { colors } from '@/constants/Colors';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { child, off, onValue, remove } from 'firebase/database';
 import dbRootRef, { ServerType } from '@/utils/firebase';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { words } from '@/constants/constants';
 
 
@@ -26,6 +26,22 @@ export default function multiplayer() {
     }
     router.navigate('./')
   }
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        onPressMenu()
+        return true;
+      };
+
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress
+      );
+
+      return () => subscription.remove();
+    }, [])
+  );
 
   useEffect(() => {
     const unsubscribe = onValue(child(dbRootRef, dbRefName), snapshot => {
