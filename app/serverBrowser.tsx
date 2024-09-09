@@ -1,35 +1,23 @@
 import { colors } from "@/constants/Colors"
 import { ActivityIndicator, Pressable, StyleSheet, Text, View, TextInput, Alert, Platform } from "react-native"
-import { get, update, runTransaction, onValue, child } from "firebase/database";
+import { update, runTransaction, child } from "firebase/database";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { useDispatch } from "react-redux";
 import { addDBRefName, addName, makeHost, makePlayer } from "@/features/playerSlice/playerSlice";
 import dbRootRef, { ServerType } from "@/utils/firebase";
+import useFirebase from "@/hooks/useFirebase";
 
 
 export default function serverBrowser() {
   const [playerName, setPlayerName] = useState<string>('')
-  const [isLoading, setIsloading] = useState<boolean>(true)
-  const [serverList, setServerList] = useState<ServerType[]>([])
+  const {isLoading, serverList, refreshServerList} = useFirebase()
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const unsubscribe = onValue(dbRootRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const newServerList = Object.keys(snapshot.val())
-          .filter(serverName => snapshot.val()[serverName].isWaiting)
-          .map(serverName => snapshot.val()[serverName])
-        setServerList(newServerList);
-      } else {
-        setServerList([]);
-        console.log("No data available");
-      }
-      setIsloading(false)
-    })
-
-    return unsubscribe
-
+    refreshServerList()
+    const interval = setInterval(refreshServerList, 3000)
+    return () => clearInterval(interval)
   }, [])
 
   function createServer() {
@@ -86,21 +74,6 @@ export default function serverBrowser() {
     });
   }
 
-  function refreshServerList() {
-    setIsloading(true)
-    get(dbRootRef).then((snapshot) => {
-      if (snapshot.exists()) {
-        setServerList(Object.keys(snapshot.val()).filter(item => snapshot.val()[item].isWaiting).map(item => snapshot.val()[item]))
-      } else {
-        setServerList([])
-        console.log("No data available");
-      }
-      setIsloading(false)
-    }).catch((error) => {
-      console.error(error);
-      setIsloading(false)
-    });
-  }
 
   return(
     <View style={styles.main}>
