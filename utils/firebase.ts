@@ -1,5 +1,5 @@
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref } from "firebase/database";
+import { initializeApp } from 'firebase/app';
+import { getDatabase, ref } from 'firebase/database';
 
 export type ServerType = {
   isWaiting: boolean;
@@ -7,9 +7,9 @@ export type ServerType = {
   serverName: string;
   playerList: string[];
   turn: number;
-  results: Record<string, [number,number]>;
+  results: Record<string, [number, number]>;
   points: Record<string, number>;
-}
+};
 
 const firebaseConfig = {
   databaseURL: process.env.EXPO_PUBLIC_API_URL,
@@ -17,6 +17,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-const dbRootRef = ref(getDatabase(app))
+const dbRootRef = ref(getDatabase(app));
 
 export default dbRootRef;

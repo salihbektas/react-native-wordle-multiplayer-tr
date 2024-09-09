@@ -1,0 +1,8 @@
+# Ignore artifacts:
+build
+coverage
+
+babel.config.js
+metro.config.js
+README.md
+tsconfig.json

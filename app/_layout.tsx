@@ -8,19 +8,19 @@ import Toast from 'react-native-toast-message';
 import { Provider } from 'react-redux';
 
 export default function Layout() {
-  return(
+  return (
     <Provider store={store}>
       <SafeAreaView style={styles.safeArea}>
         <Slot />
         <Toast config={toastConfig} />
       </SafeAreaView>
     </Provider>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
-  safeArea : {
-    flex:1,
-    backgroundColor: colors.black
-  }
-})
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.black,
+  },
+});

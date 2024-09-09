@@ -1,5 +1,5 @@
-import words from '../assets/words.json'
+import words from '../assets/words.json';
 
-const WORDSLENGTH = 5702
+const WORDSLENGTH = 5702;
 
-export {WORDSLENGTH, words}
+export { WORDSLENGTH, words };

@@ -25,6 +25,4 @@ export const toastConfig = {
       text1Style={{ color: colors.black }}
     />
   ),
-
-  
-}
+};

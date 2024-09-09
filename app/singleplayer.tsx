@@ -1,23 +1,22 @@
-import { Modal, Pressable, StyleSheet, Text, View} from 'react-native';
+import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '@/constants/Colors';
 import Game from '@/components/Game';
 import { useState } from 'react';
 import { WORDSLENGTH } from '@/constants/constants';
 
-
 export default function App() {
+  const [wordIndex, setWordIndex] = useState(
+    Math.floor(Math.random() * WORDSLENGTH),
+  );
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [attempts, setAttempts] = useState(0);
+  const [time, setTime] = useState(180);
 
-  const [wordIndex, setWordIndex] = useState(Math.floor(Math.random()*WORDSLENGTH))
-  const [isPlaying, setIsPlaying] = useState(true)
-  const [attempts, setAttempts] = useState(0)
-  const [time, setTime] = useState(180)
-
-  function onPressNext(){
-    setWordIndex(Math.floor(Math.random()*WORDSLENGTH))
-    setIsPlaying(true)
-    setTime(180)
+  function onPressNext() {
+    setWordIndex(Math.floor(Math.random() * WORDSLENGTH));
+    setIsPlaying(true);
+    setTime(180);
   }
-
 
   return (
     <View style={styles.main}>
@@ -28,7 +27,8 @@ export default function App() {
           </Pressable>
         </View>
       </Modal>
-      <Game key={wordIndex} 
+      <Game
+        key={wordIndex}
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}
         answerIndex={wordIndex}
@@ -37,34 +37,32 @@ export default function App() {
         setAttempts={setAttempts}
       />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
-
   main: {
     flex: 1,
   },
 
-  modal:{
+  modal: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
 
-  next:{
+  next: {
     width: '75%',
     height: '75%',
     backgroundColor: colors.darkGray,
     borderRadius: 16,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
 
   letter: {
     color: colors.white,
-    fontWeight : '600',
-    fontSize: 12
+    fontWeight: '600',
+    fontSize: 12,
   },
-
 });

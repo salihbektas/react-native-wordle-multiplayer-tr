@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface PlayerState {
   amIHost: boolean;
@@ -14,30 +14,31 @@ const initialState: PlayerState = {
   dbRefName: '',
   answers: [],
   numberOfGame: 5,
-}
+};
 
 export const playerSlice = createSlice({
   name: 'player',
   initialState,
   reducers: {
     addName: (state, action: PayloadAction<string>) => {
-      state.playerName = action.payload
+      state.playerName = action.payload;
     },
     addDBRefName: (state, action: PayloadAction<string>) => {
-      state.dbRefName = action.payload
+      state.dbRefName = action.payload;
     },
     makeHost: (state) => {
-      state.amIHost = true
+      state.amIHost = true;
     },
     makePlayer: (state) => {
-      state.amIHost = false
+      state.amIHost = false;
     },
     addWords: (state, action: PayloadAction<number[]>) => {
-      state.answers = action.payload
+      state.answers = action.payload;
     },
   },
-})
+});
 
-export const { makeHost, makePlayer, addName, addDBRefName, addWords,} = playerSlice.actions
+export const { makeHost, makePlayer, addName, addDBRefName, addWords } =
+  playerSlice.actions;
 
-export default playerSlice.reducer
+export default playerSlice.reducer;
