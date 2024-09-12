@@ -1,5 +1,5 @@
 import { colors } from '@/constants/Colors';
-import { useEffect } from 'react';
+import { memo, useEffect } from 'react';
 import {
   Platform,
   StyleSheet,
@@ -23,7 +23,7 @@ type propType = {
   grayLetters: string[];
 };
 
-export default function Keyboard({
+export default memo(function Keyboard({
   onPressDel,
   onPressEnter,
   onPressLetter,
@@ -162,7 +162,7 @@ export default function Keyboard({
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   keyboard: {

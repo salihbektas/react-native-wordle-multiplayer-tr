@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Animated, {
@@ -227,7 +227,7 @@ export default function Game({
   );
 }
 
-function Tile({
+const Tile = memo(function ({
   color,
   letter,
   order,
@@ -273,7 +273,7 @@ function Tile({
       </Text>
     </Animated.View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {
