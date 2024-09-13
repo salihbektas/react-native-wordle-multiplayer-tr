@@ -16,6 +16,11 @@ export default function RootLayout() {
           <Text style={styles.buttonText}>Çok Kişilik</Text>
         </Pressable>
       </Link>
+      <Link href='./setting' asChild>
+        <Pressable style={styles.button}>
+          <Text style={styles.buttonText}>Ayarlar</Text>
+        </Pressable>
+      </Link>
     </View>
   );
 }
