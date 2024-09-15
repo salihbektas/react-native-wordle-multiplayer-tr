@@ -3,7 +3,7 @@ import {
   Modal,
   Pressable,
   StyleSheet,
-  Text,
+  useColorScheme,
   View,
 } from 'react-native';
 import { colors } from '@/constants/Colors';
@@ -25,6 +25,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import ButtonText from '@/components/ButtonText';
 
 type Tab = 'results' | 'scors';
 
@@ -52,6 +53,8 @@ export default function multiplayer() {
   const [points, setPoints] = useState<Record<string, number>>({});
 
   const width = useSharedValue(Dimensions.get('window').width * 0.75);
+  const colorScheme = useColorScheme();
+  const { background } = colors[colorScheme ?? 'dark'];
 
   useEffect(() => {
     const unsubscribe = onValue(child(dbRootRef, dbRefName), (snapshot) => {
@@ -183,26 +186,26 @@ export default function multiplayer() {
                 styles.tab,
                 {
                   backgroundColor:
-                    activeTab === 'results' ? colors.green : colors.black,
+                    activeTab === 'results' ? colors.green : background,
                   borderTopLeftRadius: 16,
                 },
               ]}
               onPress={() => setActiveTab('results')}
             >
-              <Text style={styles.tabText}>Sonuçlar</Text>
+              <ButtonText style={styles.tabText}>Sonuçlar</ButtonText>
             </Pressable>
             <Pressable
               style={[
                 styles.tab,
                 {
                   backgroundColor:
-                    activeTab === 'scors' ? colors.green : colors.black,
+                    activeTab === 'scors' ? colors.green : background,
                   borderTopRightRadius: 16,
                 },
               ]}
               onPress={() => setActiveTab('scors')}
             >
-              <Text style={styles.tabText}>Puanlar</Text>
+              <ButtonText style={styles.tabText}>Puanlar</ButtonText>
             </Pressable>
           </View>
           <View style={styles.list}>
@@ -220,32 +223,32 @@ export default function multiplayer() {
                       text = `${player}: ${results[player][0]} / ${formatTime(results[player][1])}`;
                     }
                     return player === playerName ? (
-                      <Text key={player} style={styles.selfLetter}>
+                      <ButtonText key={player} style={styles.selfLetter}>
                         {text}
-                      </Text>
+                      </ButtonText>
                     ) : (
-                      <Text key={player} style={styles.letter}>
+                      <ButtonText key={player} style={styles.letter}>
                         {text}
-                      </Text>
+                      </ButtonText>
                     );
                   })
               : Object.keys(points)
                   .sort((p1, p2) => points[p2] - points[p1])
                   .map((player) => {
                     return player === playerName ? (
-                      <Text key={player} style={styles.selfLetter}>
+                      <ButtonText key={player} style={styles.selfLetter}>
                         {`${player}: ${points[player]}`}
-                      </Text>
+                      </ButtonText>
                     ) : (
-                      <Text key={player} style={styles.letter}>
+                      <ButtonText key={player} style={styles.letter}>
                         {`${player}: ${points[player]}`}
-                      </Text>
+                      </ButtonText>
                     );
                   })}
           </View>
-          <Text
+          <ButtonText
             style={styles.feedbackText}
-          >{`${turn + 1} / ${numberOfGame}`}</Text>
+          >{`${turn + 1} / ${numberOfGame}`}</ButtonText>
           <Animated.View
             style={{ flex: 1, width, backgroundColor: colors.green }}
           />

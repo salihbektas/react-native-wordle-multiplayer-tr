@@ -17,12 +17,14 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  Text,
+  useColorScheme,
   View,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { WORDSLENGTH } from '../constants/constants';
 import { addWords } from '@/features/playerSlice/playerSlice';
+import ThemedText from '@/components/ThemedText';
+import ButtonText from '@/components/ButtonText';
 
 const defaultConfigs = {
   time: 180,
@@ -36,6 +38,9 @@ export default function lobby() {
   const dispatch = useDispatch();
 
   const [playerList, setPlayerList] = useState<string[]>([]);
+
+  const colorScheme = useColorScheme();
+  const { background, text } = colors[colorScheme ?? 'dark'];
 
   function start() {
     const updates = { isWaiting: false };
@@ -145,16 +150,16 @@ export default function lobby() {
   }
 
   return (
-    <View style={styles.main}>
-      <Text style={styles.text}>Oyun Lobisi</Text>
+    <View style={[styles.main, { backgroundColor: background }]}>
+      <ThemedText style={styles.text}>Oyun Lobisi</ThemedText>
 
-      <Text style={styles.text}>Oyuncu Listesi</Text>
+      <ThemedText style={styles.text}>Oyuncu Listesi</ThemedText>
 
       <View style={styles.listContainer}>
-        <Text style={styles.text}>Oyuncular...</Text>
+        <ThemedText style={styles.text}>Oyuncular...</ThemedText>
         {playerList.map((playerNameInList, index) => (
           <View key={index} style={styles.listRow}>
-            <Text style={styles.text}>{playerNameInList}</Text>
+            <ThemedText style={styles.text}>{playerNameInList}</ThemedText>
             {amIHost && playerName !== playerNameInList && (
               <Pressable
                 onPress={() => {
@@ -163,7 +168,7 @@ export default function lobby() {
               >
                 <Image
                   source={require('../assets/images/close.png')}
-                  style={styles.icon}
+                  style={[styles.icon, { tintColor: text }]}
                 />
               </Pressable>
             )}
@@ -173,21 +178,18 @@ export default function lobby() {
 
       {amIHost && (
         <Pressable
-          style={[
-            styles.button,
-            playerList.length < 2 && { backgroundColor: colors.darkGray },
-          ]}
+          style={styles.button}
           onPress={start}
           disabled={playerList.length < 2}
         >
-          <Text style={styles.buttonText}>Başlat</Text>
+          <ButtonText style={styles.buttonText}>Başlat</ButtonText>
         </Pressable>
       )}
 
       <Pressable style={styles.button} onPress={disconnect}>
-        <Text style={styles.buttonText}>
+        <ButtonText style={styles.buttonText}>
           {amIHost ? 'Odayı Dağıt' : 'Odadan Ayrıl'}
-        </Text>
+        </ButtonText>
       </Pressable>
     </View>
   );
@@ -211,7 +213,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 8,
     borderWidth: 2,
-    borderColor: colors.lightGray,
+    borderColor: colors.darkGray,
   },
 
   listRow: {
@@ -219,7 +221,7 @@ const styles = StyleSheet.create({
     marginVertical: 2,
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: colors.lightGray,
+    borderColor: colors.darkGray,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -233,7 +235,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.darkGray,
     padding: 8,
     borderRadius: 8,
     marginTop: 8,

@@ -1,114 +1,118 @@
+import ButtonText from '@/components/ButtonText';
+import ThemedText from '@/components/ThemedText';
 import { colors } from '@/constants/Colors';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
   StyleSheet,
-  SafeAreaView,
   View,
   ScrollView,
-  Text,
   TouchableOpacity,
   Switch,
   Image,
   Pressable,
+  Appearance,
+  Platform,
+  useColorScheme,
 } from 'react-native';
 
 export default function settings() {
-  const [form, setForm] = useState({
-    darkMode: false,
-    emailNotifications: true,
-    pushNotifications: false,
-  });
+  const colorScheme = useColorScheme();
+  const [dark, setDark] = useState(colorScheme === 'dark');
+  const { background } = colors[colorScheme ?? 'dark'];
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f6f6f6' }}>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Pressable
-            style={styles.button}
-            onPress={() => router.navigate('./')}
-          >
-            <Image
-              source={require('../assets/images/back.png')}
-              style={styles.icon}
-            />
-            <Text style={styles.backText}>{'Menüye Dön '}</Text>
-          </Pressable>
-          <Text style={styles.headerTitle}>Ayarlar</Text>
-        </View>
+    <View style={[styles.container, { backgroundColor: background }]}>
+      <View style={styles.header}>
+        <Pressable style={styles.button} onPress={() => router.navigate('./')}>
+          <Image
+            source={require('../assets/images/back.png')}
+            style={[styles.icon, { tintColor: colors.white }]}
+          />
+          <ButtonText style={styles.backText}>{'Menüye Dön '}</ButtonText>
+        </Pressable>
+        <ThemedText style={styles.headerTitle}>Ayarlar</ThemedText>
+      </View>
 
-        <ScrollView>
-          <View style={styles.section}>
-            <View style={styles.sectionBody}>
-              <View style={[styles.rowWrapper, styles.rowFirst]}>
-                <TouchableOpacity
-                  onPress={() => {
-                    // handle onPress
-                  }}
-                  style={styles.row}
-                >
-                  <Text style={styles.rowLabel}>Kullanıcı İsmi</Text>
+      <ScrollView>
+        <View style={styles.section}>
+          <View style={styles.sectionBody}>
+            <View style={[styles.rowWrapper, styles.rowFirst]}>
+              <TouchableOpacity
+                onPress={() => {
+                  // handle onPress
+                }}
+                style={styles.row}
+              >
+                <ButtonText style={styles.rowLabel}>Kullanıcı İsmi</ButtonText>
 
-                  <View style={styles.rowSpacer} />
+                <View style={styles.rowSpacer} />
 
-                  <Text style={styles.rowValue}>İsim Yok</Text>
+                <ButtonText style={styles.rowValue}>İsim Yok</ButtonText>
 
-                  <Image
-                    source={require('../assets/images/back.png')}
-                    style={[
-                      styles.icon,
-                      { transform: [{ rotateY: '180deg' }] },
-                    ]}
-                  />
-                </TouchableOpacity>
-              </View>
+                <Image
+                  source={require('../assets/images/back.png')}
+                  style={[
+                    styles.icon,
+                    { transform: [{ rotateY: '180deg' }] },
+                    { tintColor: colors.white },
+                  ]}
+                />
+              </TouchableOpacity>
+            </View>
 
+            {Platform.OS !== 'web' && (
               <View style={styles.rowWrapper}>
                 <View style={styles.row}>
-                  <Text style={styles.rowLabel}>Koyu Tema</Text>
+                  <ButtonText style={styles.rowLabel}>Koyu Tema</ButtonText>
 
                   <View style={styles.rowSpacer} />
 
                   <Switch
-                    onValueChange={(darkMode) => setForm({ ...form, darkMode })}
-                    value={form.darkMode}
+                    onValueChange={(darkMode) => {
+                      setDark(darkMode);
+                      if (Platform.OS !== 'web')
+                        Appearance.setColorScheme(darkMode ? 'dark' : 'light');
+                    }}
+                    trackColor={{ false: colors.lightGray }}
+                    value={dark}
                   />
                 </View>
               </View>
+            )}
 
-              <View style={styles.rowWrapper}>
-                <TouchableOpacity
-                  onPress={() => {
-                    // handle onPress
-                  }}
-                  style={styles.row}
-                >
-                  <Text style={styles.rowLabel}>Font Boyutu</Text>
+            <View style={styles.rowWrapper}>
+              <TouchableOpacity
+                onPress={() => {
+                  // handle onPress
+                }}
+                style={styles.row}
+              >
+                <ButtonText style={styles.rowLabel}>Font Boyutu</ButtonText>
 
-                  <View style={styles.rowSpacer} />
+                <View style={styles.rowSpacer} />
 
-                  <Text style={styles.rowValue}>32</Text>
+                <ButtonText style={styles.rowValue}>32</ButtonText>
 
-                  <Image
-                    source={require('../assets/images/back.png')}
-                    style={[
-                      styles.icon,
-                      { transform: [{ rotateY: '180deg' }] },
-                    ]}
-                  />
-                </TouchableOpacity>
-              </View>
+                <Image
+                  source={require('../assets/images/back.png')}
+                  style={[
+                    styles.icon,
+                    { transform: [{ rotateY: '180deg' }] },
+                    { tintColor: colors.white },
+                  ]}
+                />
+              </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.black,
     paddingVertical: 24,
     paddingHorizontal: 0,
     flexGrow: 1,
@@ -120,7 +124,6 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
     marginTop: 3,
-    tintColor: colors.black,
   },
   /** Header */
   header: {
@@ -132,10 +135,9 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 32,
     fontWeight: '700',
-    color: colors.white,
   },
   button: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.darkGray,
     flexDirection: 'row',
     paddingBottom: 4,
     paddingHorizontal: 8,
@@ -143,7 +145,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   backText: {
-    color: colors.black,
     fontWeight: '600',
     fontSize: 20,
   },
@@ -153,7 +154,6 @@ const styles = StyleSheet.create({
   },
   sectionBody: {
     paddingLeft: 24,
-    backgroundColor: colors.white,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: colors.darkGray,
@@ -176,7 +176,6 @@ const styles = StyleSheet.create({
   rowLabel: {
     fontSize: 17,
     fontWeight: '500',
-    color: colors.black,
   },
   rowSpacer: {
     flexGrow: 1,
@@ -186,7 +185,6 @@ const styles = StyleSheet.create({
   rowValue: {
     fontSize: 17,
     fontWeight: '500',
-    color: colors.darkGray,
     marginRight: 4,
   },
 });

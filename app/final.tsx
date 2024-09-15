@@ -3,7 +3,7 @@ import {
   Image,
   Pressable,
   StyleSheet,
-  Text,
+  useColorScheme,
   View,
 } from 'react-native';
 import { colors } from '@/constants/Colors';
@@ -14,6 +14,8 @@ import { child, off, onValue, remove } from 'firebase/database';
 import dbRootRef, { ServerType } from '@/utils/firebase';
 import { router, useFocusEffect } from 'expo-router';
 import { words } from '@/constants/constants';
+import ThemedText from '@/components/ThemedText';
+import ButtonText from '@/components/ButtonText';
 
 export default function multiplayer() {
   const { amIHost, playerName, dbRefName, answers } = useSelector(
@@ -21,12 +23,14 @@ export default function multiplayer() {
   );
 
   const [points, setPoints] = useState<Record<string, number>>({});
+  const colorScheme = useColorScheme();
+  const { background } = colors[colorScheme ?? 'dark'];
 
   const results = useMemo(() => {
     return answers.map((answer) => (
-      <Text key={answer} style={styles.wordLetter}>
+      <ThemedText key={answer} style={styles.wordLetter}>
         {words[answer]}
-      </Text>
+      </ThemedText>
     ));
   }, [answers]);
 
@@ -67,34 +71,34 @@ export default function multiplayer() {
   }, []);
 
   return (
-    <View style={styles.main}>
+    <View style={[styles.main, { backgroundColor: background }]}>
       <View style={styles.top}>
         <Pressable style={styles.button} onPress={onPressMenu}>
           <Image
             source={require('../assets/images/back.png')}
             style={styles.icon}
           />
-          <Text style={styles.backText}>{'Menüye Dön '}</Text>
+          <ButtonText style={styles.backText}>{'Menüye Dön '}</ButtonText>
         </Pressable>
       </View>
       <View style={styles.pointList}>
-        <Text style={styles.letter}>Puanlar </Text>
+        <ThemedText style={styles.letter}>Puanlar </ThemedText>
         {Object.keys(points)
           .sort((p1, p2) => points[p2] - points[p1])
           .map((player) => {
             return player === playerName ? (
-              <Text key={player} style={styles.selfLetter}>
+              <ThemedText key={player} style={styles.selfLetter}>
                 {`${player}: ${points[player]}`}
-              </Text>
+              </ThemedText>
             ) : (
-              <Text key={player} style={styles.letter}>
+              <ThemedText key={player} style={styles.letter}>
                 {`${player}: ${points[player]}`}
-              </Text>
+              </ThemedText>
             );
           })}
       </View>
       <View style={styles.wordList}>
-        <Text style={styles.wordLetter}>Kelimeler</Text>
+        <ThemedText style={styles.wordLetter}>Kelimeler</ThemedText>
         {results}
       </View>
     </View>
@@ -111,7 +115,7 @@ const styles = StyleSheet.create({
   top: { alignItems: 'flex-start' },
 
   button: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.darkGray,
     flexDirection: 'row',
     paddingBottom: 4,
     paddingHorizontal: 8,
@@ -123,7 +127,7 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
     marginTop: 3,
-    tintColor: colors.black,
+    tintColor: colors.white,
   },
 
   pointList: {

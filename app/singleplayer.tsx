@@ -3,6 +3,7 @@ import { colors } from '@/constants/Colors';
 import Game from '@/components/Game';
 import { useState } from 'react';
 import { WORDSLENGTH } from '@/constants/constants';
+import ThemedText from '@/components/ThemedText';
 
 export default function App() {
   const [wordIndex, setWordIndex] = useState(
@@ -23,7 +24,7 @@ export default function App() {
       <Modal visible={!isPlaying} animationType='fade' transparent={true}>
         <View style={styles.modal}>
           <Pressable style={styles.next} onPress={onPressNext}>
-            <Text style={styles.letter}>Sıradaki</Text>
+            <ThemedText style={styles.letter}>Sıradaki</ThemedText>
           </Pressable>
         </View>
       </Modal>

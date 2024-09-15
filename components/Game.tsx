@@ -1,5 +1,11 @@
 import { memo, useRef, useState } from 'react';
-import { Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
+import {
+  Dimensions,
+  Platform,
+  StyleSheet,
+  useColorScheme,
+  View,
+} from 'react-native';
 import Toast from 'react-native-toast-message';
 import Animated, {
   useSharedValue,
@@ -12,6 +18,7 @@ import { colors } from '@/constants/Colors';
 import { words } from '../constants/constants';
 import useInterval from 'use-interval';
 import Keyboard from './Keyboard';
+import ThemedText from './ThemedText';
 
 type TileColors = 'black' | 'yellow' | 'lightGray' | 'darkGray' | 'green';
 
@@ -69,6 +76,8 @@ export default function Game({
   const [yellowLetters, setYellowLetters] = useState<string[]>([]);
   const [greenLetters, setGreenLetters] = useState<string[]>([]);
   const [now, setNow] = useState(Date.now);
+  const colorScheme = useColorScheme();
+  const { background } = colors[colorScheme ?? 'dark'];
 
   useInterval(
     () => {
@@ -186,14 +195,16 @@ export default function Game({
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: background }]}>
       <View style={styles.top}>
-        <Text style={[styles.letter, { fontSize: 24 }]}>WORDLE TÜRKÇE</Text>
-        <Text style={[styles.letter, { fontSize: 24 }]}>
+        <ThemedText style={[styles.letter, { fontSize: 24 }]}>
+          WORDLE TÜRKÇE
+        </ThemedText>
+        <ThemedText style={[styles.letter, { fontSize: 24 }]}>
           {time >= 0
             ? `${Math.floor(time / 60)}:${String(time % 60).padStart(2, '0')}`
             : '0:00'}
-        </Text>
+        </ThemedText>
       </View>
 
       <View style={styles.board}>
@@ -236,8 +247,10 @@ const Tile = memo(function ({
   letter: string;
   order: number;
 }) {
+  const colorScheme = useColorScheme();
+  const { background } = colors[colorScheme ?? 'dark'];
   const oldColor = useRef('black');
-  const sh = useSharedValue({ deg: 0, color: colors.black });
+  const sh = useSharedValue({ deg: 0, color: background });
 
   if (color !== oldColor.current) {
     oldColor.current = color;
@@ -247,7 +260,7 @@ const Tile = memo(function ({
         withTiming(
           {
             deg: 90,
-            color: color === 'black' ? colors.darkGray : colors[color],
+            color: color === 'black' ? background : colors[color],
           },
           { duration: 175 },
         ),
@@ -262,15 +275,15 @@ const Tile = memo(function ({
       transform: [{ rotateX: `${sh.value.deg}deg` }],
       backgroundColor: sh.value.color,
       borderColor:
-        sh.value.color === colors.black ? colors.darkGray : sh.value.color,
+        sh.value.color === background ? colors.darkGray : sh.value.color,
     };
   });
 
   return (
     <Animated.View style={[BoxStyle(color).box, animatedStyle]}>
-      <Text style={styles.letter2} selectable={false}>
+      <ThemedText style={styles.letter2} selectable={false}>
         {letter}
-      </Text>
+      </ThemedText>
     </Animated.View>
   );
 });
@@ -278,7 +291,6 @@ const Tile = memo(function ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.black,
     alignItems: 'center',
     paddingBottom: 40,
   },

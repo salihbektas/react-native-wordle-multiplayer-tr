@@ -3,11 +3,11 @@ import {
   ActivityIndicator,
   Pressable,
   StyleSheet,
-  Text,
   View,
   TextInput,
   Alert,
   Platform,
+  useColorScheme,
 } from 'react-native';
 import { update, runTransaction, child } from 'firebase/database';
 import { useEffect, useState } from 'react';
@@ -21,11 +21,15 @@ import {
 } from '@/features/playerSlice/playerSlice';
 import dbRootRef, { ServerType } from '@/utils/firebase';
 import useFirebase from '@/hooks/useFirebase';
+import ThemedText from '@/components/ThemedText';
+import ButtonText from '@/components/ButtonText';
 
 export default function serverBrowser() {
   const [playerName, setPlayerName] = useState<string>('');
   const { isLoading, serverList, refreshServerList } = useFirebase();
   const dispatch = useDispatch();
+  const colorScheme = useColorScheme();
+  const { background } = colors[colorScheme ?? 'dark'];
 
   useEffect(() => {
     refreshServerList();
@@ -98,8 +102,8 @@ export default function serverBrowser() {
   }
 
   return (
-    <View style={styles.main}>
-      <Text style={styles.text}>Çok Oyuncu</Text>
+    <View style={[styles.main, { backgroundColor: background }]}>
+      <ThemedText style={styles.text}>Çok Oyuncu</ThemedText>
 
       <TextInput
         style={styles.input}
@@ -108,7 +112,7 @@ export default function serverBrowser() {
         placeholder='oyuncu ismi'
       />
 
-      <Text style={styles.text}>Sunucu Listesi</Text>
+      <ThemedText style={styles.text}>Sunucu Listesi</ThemedText>
 
       <View style={styles.listContainer}>
         {isLoading ? (
@@ -118,20 +122,20 @@ export default function serverBrowser() {
             color={colors.green}
           />
         ) : serverList.length === 0 ? (
-          <Text style={styles.noServerText}>Sunucu Yok</Text>
+          <ThemedText style={styles.noServerText}>Sunucu Yok</ThemedText>
         ) : (
           serverList.map((server, index) => (
             <View key={index} style={styles.listRow}>
-              <Text
+              <ThemedText
                 style={styles.text}
-              >{`${server.serverName}   ${server.playerCount}`}</Text>
+              >{`${server.serverName}   ${server.playerCount}`}</ThemedText>
               <Pressable
                 style={styles.button}
                 onPress={() => {
                   joinServer(server.serverName);
                 }}
               >
-                <Text style={styles.buttonText}>Katıl</Text>
+                <ButtonText style={styles.buttonText}>Katıl</ButtonText>
               </Pressable>
             </View>
           ))
@@ -139,11 +143,11 @@ export default function serverBrowser() {
       </View>
 
       <Pressable style={styles.button} onPress={createServer}>
-        <Text style={styles.buttonText}>Oyun Kur</Text>
+        <ButtonText style={styles.buttonText}>Oyun Kur</ButtonText>
       </Pressable>
 
       <Pressable style={styles.button} onPress={refreshServerList}>
-        <Text style={styles.buttonText}>Yenile</Text>
+        <ButtonText style={styles.buttonText}>Yenile</ButtonText>
       </Pressable>
     </View>
   );
@@ -176,7 +180,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 8,
     borderWidth: 2,
-    borderColor: colors.lightGray,
+    borderColor: colors.darkGray,
   },
 
   listRow: {
@@ -184,7 +188,7 @@ const styles = StyleSheet.create({
     marginVertical: 2,
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: colors.lightGray,
+    borderColor: colors.darkGray,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -200,7 +204,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.darkGray,
     padding: 8,
     borderRadius: 8,
     marginTop: 8,
