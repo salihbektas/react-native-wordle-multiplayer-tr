@@ -16,6 +16,8 @@ import { router, useFocusEffect } from 'expo-router';
 import { words } from '@/constants/constants';
 import ThemedText from '@/components/ThemedText';
 import ButtonText from '@/components/ButtonText';
+import * as WebBrowser from 'expo-web-browser';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function multiplayer() {
   const { amIHost, playerName, dbRefName, answers } = useSelector(
@@ -24,13 +26,24 @@ export default function multiplayer() {
 
   const [points, setPoints] = useState<Record<string, number>>({});
   const colorScheme = useColorScheme();
-  const { background } = colors[colorScheme ?? 'dark'];
+  const { background, text } = colors[colorScheme ?? 'dark'];
 
   const results = useMemo(() => {
     return answers.map((answer) => (
-      <ThemedText key={answer} style={styles.wordLetter}>
-        {words[answer]}
-      </ThemedText>
+      <Pressable
+        key={answer}
+        style={styles.linkContainer}
+        onPress={() =>
+          WebBrowser.openBrowserAsync(
+            `http://sozluk.gov.tr/?ara=${words[answer].toLocaleLowerCase('tr')}`,
+          )
+        }
+      >
+        <ThemedText style={[styles.wordLetter, { marginRight: 14 }]}>
+          {words[answer]}
+        </ThemedText>
+        <Ionicons name='search-circle-outline' size={32} color={text} />
+      </Pressable>
     ));
   }, [answers]);
 
@@ -138,6 +151,12 @@ const styles = StyleSheet.create({
   wordList: {
     marginTop: 16,
     marginHorizontal: 'auto',
+  },
+
+  linkContainer: {
+    flexDirection: 'row',
+    borderBottomColor: colors.white,
+    borderBottomWidth: 1,
   },
 
   letter: {
