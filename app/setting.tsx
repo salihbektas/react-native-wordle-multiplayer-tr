@@ -1,6 +1,7 @@
 import ButtonText from '@/components/ButtonText';
 import ThemedText from '@/components/ThemedText';
 import { colors } from '@/constants/Colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -19,7 +20,14 @@ import {
 export default function settings() {
   const colorScheme = useColorScheme();
   const [dark, setDark] = useState(colorScheme === 'dark');
-  const { background } = colors[colorScheme ?? 'dark'];
+  const { background, text } = colors[colorScheme ?? 'dark'];
+
+  function toggleDark(darkMode: boolean) {
+    AsyncStorage.setItem('dark', String(darkMode));
+    setDark(darkMode);
+    if (Platform.OS !== 'web')
+      Appearance.setColorScheme(darkMode ? 'dark' : 'light');
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: background }]}>
@@ -44,18 +52,18 @@ export default function settings() {
                 }}
                 style={styles.row}
               >
-                <ButtonText style={styles.rowLabel}>Kullanıcı İsmi</ButtonText>
+                <ThemedText style={styles.rowLabel}>Kullanıcı İsmi</ThemedText>
 
                 <View style={styles.rowSpacer} />
 
-                <ButtonText style={styles.rowValue}>İsim Yok</ButtonText>
+                <ThemedText style={styles.rowValue}>İsim Yok</ThemedText>
 
                 <Image
                   source={require('../assets/images/back.png')}
                   style={[
                     styles.icon,
                     { transform: [{ rotateY: '180deg' }] },
-                    { tintColor: colors.white },
+                    { tintColor: text },
                   ]}
                 />
               </TouchableOpacity>
@@ -64,16 +72,12 @@ export default function settings() {
             {Platform.OS !== 'web' && (
               <View style={styles.rowWrapper}>
                 <View style={styles.row}>
-                  <ButtonText style={styles.rowLabel}>Koyu Tema</ButtonText>
+                  <ThemedText style={styles.rowLabel}>Koyu Tema</ThemedText>
 
                   <View style={styles.rowSpacer} />
 
                   <Switch
-                    onValueChange={(darkMode) => {
-                      setDark(darkMode);
-                      if (Platform.OS !== 'web')
-                        Appearance.setColorScheme(darkMode ? 'dark' : 'light');
-                    }}
+                    onValueChange={toggleDark}
                     trackColor={{ false: colors.lightGray }}
                     value={dark}
                   />
@@ -88,18 +92,18 @@ export default function settings() {
                 }}
                 style={styles.row}
               >
-                <ButtonText style={styles.rowLabel}>Font Boyutu</ButtonText>
+                <ThemedText style={styles.rowLabel}>Font Boyutu</ThemedText>
 
                 <View style={styles.rowSpacer} />
 
-                <ButtonText style={styles.rowValue}>32</ButtonText>
+                <ThemedText style={styles.rowValue}>32</ThemedText>
 
                 <Image
                   source={require('../assets/images/back.png')}
                   style={[
                     styles.icon,
                     { transform: [{ rotateY: '180deg' }] },
-                    { tintColor: colors.white },
+                    { tintColor: text },
                   ]}
                 />
               </TouchableOpacity>
