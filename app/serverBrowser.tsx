@@ -12,7 +12,7 @@ import {
 import { update, runTransaction, child } from 'firebase/database';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   addDBRefName,
   addName,
@@ -23,10 +23,14 @@ import dbRootRef, { ServerType } from '@/utils/firebase';
 import useFirebase from '@/hooks/useFirebase';
 import ThemedText from '@/components/ThemedText';
 import ButtonText from '@/components/ButtonText';
+import { RootState } from '@/store/store';
 
 export default function serverBrowser() {
   const [playerName, setPlayerName] = useState<string>('');
   const { isLoading, serverList, refreshServerList } = useFirebase();
+  const { playerName: storedPlayerName } = useSelector(
+    (state: RootState) => state.player,
+  );
   const dispatch = useDispatch();
   const colorScheme = useColorScheme();
   const { background } = colors[colorScheme ?? 'dark'];
@@ -62,7 +66,7 @@ export default function serverBrowser() {
     };
     update(dbRootRef, updates).then(() => {
       dispatch(makeHost());
-      dispatch(addName(playerName));
+      if (playerName !== '') dispatch(addName(playerName));
       dispatch(addDBRefName(`/${playerName} oyun odası`));
       router.navigate('./lobby');
     });
@@ -95,7 +99,7 @@ export default function serverBrowser() {
       },
     ).then(() => {
       dispatch(makePlayer());
-      dispatch(addName(playerName));
+      if (playerName !== '') dispatch(addName(playerName));
       dispatch(addDBRefName(`/${serverName} oyun odası`));
       router.navigate('./lobby');
     });
@@ -105,12 +109,15 @@ export default function serverBrowser() {
     <View style={[styles.main, { backgroundColor: background }]}>
       <ThemedText style={styles.text}>Çok Oyuncu</ThemedText>
 
-      <TextInput
-        style={styles.input}
-        onChangeText={setPlayerName}
-        value={playerName}
-        placeholder='oyuncu ismi'
-      />
+      {storedPlayerName === '' ? (
+        <TextInput
+          style={styles.input}
+          onChangeText={setPlayerName}
+          value={playerName}
+          placeholder='oyuncu ismi'
+          placeholderTextColor={colors.white}
+        />
+      ) : null}
 
       <ThemedText style={styles.text}>Sunucu Listesi</ThemedText>
 
@@ -170,7 +177,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.darkGray,
     padding: 8,
     borderRadius: 8,
-    color: colors.black,
+    color: colors.white,
     fontSize: 30,
     marginVertical: 4,
   },

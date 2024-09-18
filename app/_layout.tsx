@@ -28,7 +28,7 @@ export default function Layout() {
         if (Platform.OS !== 'web')
           Appearance.setColorScheme(isDark ? 'dark' : 'light');
       } catch (e) {
-        console.warn(e);
+        console.warn('initial Load error', e);
       } finally {
         setAppIsReady(true);
       }

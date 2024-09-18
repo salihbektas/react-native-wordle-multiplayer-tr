@@ -1,9 +1,12 @@
 import ButtonText from '@/components/ButtonText';
 import ThemedText from '@/components/ThemedText';
 import { colors } from '@/constants/Colors';
+import { addName } from '@/features/playerSlice/playerSlice';
+import { RootState } from '@/store/store';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -15,12 +18,20 @@ import {
   Appearance,
   Platform,
   useColorScheme,
+  TextInput,
 } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function settings() {
   const colorScheme = useColorScheme();
   const [dark, setDark] = useState(colorScheme === 'dark');
   const { background, text } = colors[colorScheme ?? 'dark'];
+  const inputRef = useRef<TextInput | null>(null);
+  const { playerName: storedPlayerName } = useSelector(
+    (state: RootState) => state.player,
+  );
+  const dispatch = useDispatch();
+  const [playerName, setPlayerName] = useState<string>(storedPlayerName);
 
   function toggleDark(darkMode: boolean) {
     AsyncStorage.setItem('dark', String(darkMode));
@@ -48,7 +59,7 @@ export default function settings() {
             <View style={[styles.rowWrapper, styles.rowFirst]}>
               <TouchableOpacity
                 onPress={() => {
-                  // handle onPress
+                  if (inputRef.current) inputRef.current.focus();
                 }}
                 style={styles.row}
               >
@@ -56,15 +67,23 @@ export default function settings() {
 
                 <View style={styles.rowSpacer} />
 
-                <ThemedText style={styles.rowValue}>İsim Yok</ThemedText>
-
-                <Image
-                  source={require('../assets/images/back.png')}
+                <TextInput
+                  ref={inputRef}
                   style={[
-                    styles.icon,
-                    { transform: [{ rotateY: '180deg' }] },
-                    { tintColor: text },
+                    styles.input,
+                    { backgroundColor: background, color: text },
                   ]}
+                  onChangeText={setPlayerName}
+                  onEndEditing={() => dispatch(addName(playerName))}
+                  value={playerName}
+                  placeholder='düzenle...'
+                  placeholderTextColor={text}
+                />
+
+                <MaterialCommunityIcons
+                  name='pencil-box-outline'
+                  size={24}
+                  color={text}
                 />
               </TouchableOpacity>
             </View>
@@ -190,5 +209,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '500',
     marginRight: 4,
+  },
+
+  input: {
+    backgroundColor: colors.darkGray,
+    color: colors.black,
+    fontSize: 17,
   },
 });

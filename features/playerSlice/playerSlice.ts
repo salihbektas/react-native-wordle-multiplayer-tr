@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface PlayerState {
@@ -22,6 +23,7 @@ export const playerSlice = createSlice({
   reducers: {
     addName: (state, action: PayloadAction<string>) => {
       state.playerName = action.payload;
+      AsyncStorage.setItem('playerName', action.payload);
     },
     addDBRefName: (state, action: PayloadAction<string>) => {
       state.dbRefName = action.payload;

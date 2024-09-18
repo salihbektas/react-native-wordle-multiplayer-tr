@@ -3,10 +3,26 @@ import { router } from 'expo-router';
 import { colors } from '@/constants/Colors';
 import ThemedText from '@/components/ThemedText';
 import ButtonText from '@/components/ButtonText';
+import { useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
+import { addName } from '@/features/playerSlice/playerSlice';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const { background } = colors[colorScheme ?? 'dark'];
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const playerName = await AsyncStorage.getItem('playerName');
+        if (playerName) dispatch(addName(playerName));
+      } catch (e) {
+        console.warn('PlayerName Load error', e);
+      }
+    })();
+  }, []);
   return (
     <View style={[styles.main, { backgroundColor: background }]}>
       <ThemedText style={styles.heading}>WORDLE TÜRKÇE</ThemedText>
