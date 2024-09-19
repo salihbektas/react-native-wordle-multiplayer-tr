@@ -1,4 +1,5 @@
 import { colors } from '@/constants/Colors';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { memo, useEffect } from 'react';
 import {
   Platform,
@@ -118,9 +119,7 @@ export default memo(function Keyboard({
                 onPress={onPressEnter}
                 key={item}
               >
-                <Text style={styles.letter} selectable={false}>
-                  {item}
-                </Text>
+                <AntDesign name='enter' size={20} color={colors.white} />
               </TouchableOpacity>
             );
           if (item === 'DEL')
@@ -130,9 +129,7 @@ export default memo(function Keyboard({
                 onPress={onPressDel}
                 key={item}
               >
-                <Text style={styles.letter} selectable={false}>
-                  {item}
-                </Text>
+                <Feather name='delete' size={20} color={colors.white} />
               </TouchableOpacity>
             );
 
