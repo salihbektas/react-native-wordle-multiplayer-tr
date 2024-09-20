@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
 
   linkContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     borderBottomColor: colors.white,
     borderBottomWidth: 1,
   },

@@ -3,6 +3,7 @@ import {
   Modal,
   Pressable,
   StyleSheet,
+  Text,
   useColorScheme,
   View,
 } from 'react-native';
@@ -26,6 +27,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import ButtonText from '@/components/ButtonText';
+import { words } from '@/constants/constants';
+import * as WebBrowser from 'expo-web-browser';
+import { Ionicons } from '@expo/vector-icons';
 
 type Tab = 'results' | 'scors';
 
@@ -246,6 +250,24 @@ export default function multiplayer() {
                     );
                   })}
           </View>
+          <View style={styles.word}>
+            <Text style={styles.letter}>{words[wordIndex]}</Text>
+            <Pressable
+              style={styles.linkContainer}
+              onPress={() =>
+                WebBrowser.openBrowserAsync(
+                  `http://sozluk.gov.tr/?ara=${words[wordIndex].toLocaleLowerCase('tr')}`,
+                )
+              }
+            >
+              <Text style={styles.subLetter}>{'Türk Dil Kurumunda Ara'}</Text>
+              <Ionicons
+                name='search-circle-outline'
+                size={20}
+                color={colors.white}
+              />
+            </Pressable>
+          </View>
           <ButtonText
             style={styles.feedbackText}
           >{`${turn + 1} / ${numberOfGame}`}</ButtonText>
@@ -302,6 +324,23 @@ const styles = StyleSheet.create({
     flex: 15,
     marginHorizontal: 'auto',
     paddingTop: 8,
+  },
+
+  word: {
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+
+  linkContainer: {
+    flexDirection: 'row',
+    borderBottomColor: colors.white,
+    borderBottomWidth: 1,
+  },
+
+  subLetter: {
+    color: colors.white,
+    fontSize: 16,
+    marginRight: 14,
   },
 
   letter: {
