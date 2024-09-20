@@ -26,11 +26,11 @@ import ButtonText from '@/components/ButtonText';
 import { RootState } from '@/store/store';
 
 export default function serverBrowser() {
-  const [playerName, setPlayerName] = useState<string>('');
   const { isLoading, serverList, refreshServerList } = useFirebase();
   const { playerName: storedPlayerName } = useSelector(
     (state: RootState) => state.player,
   );
+  const [playerName, setPlayerName] = useState<string>(storedPlayerName);
   const dispatch = useDispatch();
   const colorScheme = useColorScheme();
   const { background } = colors[colorScheme ?? 'dark'];
