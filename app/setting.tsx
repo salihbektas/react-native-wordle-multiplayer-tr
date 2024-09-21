@@ -103,30 +103,6 @@ export default function settings() {
                 </View>
               </View>
             )}
-
-            <View style={styles.rowWrapper}>
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}
-                style={styles.row}
-              >
-                <ThemedText style={styles.rowLabel}>Font Boyutu</ThemedText>
-
-                <View style={styles.rowSpacer} />
-
-                <ThemedText style={styles.rowValue}>32</ThemedText>
-
-                <Image
-                  source={require('../assets/images/back.png')}
-                  style={[
-                    styles.icon,
-                    { transform: [{ rotateY: '180deg' }] },
-                    { tintColor: text },
-                  ]}
-                />
-              </TouchableOpacity>
-            </View>
           </View>
         </View>
       </ScrollView>
