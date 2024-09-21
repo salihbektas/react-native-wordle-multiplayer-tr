@@ -162,7 +162,6 @@ const styles = StyleSheet.create({
   },
 
   letter: {
-    color: colors.white,
     fontWeight: '600',
     fontSize: 30,
   },
@@ -174,7 +173,6 @@ const styles = StyleSheet.create({
   },
 
   wordLetter: {
-    color: colors.lightGray,
     fontWeight: '600',
     fontSize: 30,
   },

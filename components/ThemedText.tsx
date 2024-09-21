@@ -6,7 +6,7 @@ const ThemedText = ({ style, children, ...rest }: TextProps) => {
   const color = colors[colorScheme ?? 'dark'].text;
 
   return (
-    <Text style={[style, { color }]} {...rest}>
+    <Text style={[{ color }, style]} {...rest}>
       {children}
     </Text>
   );

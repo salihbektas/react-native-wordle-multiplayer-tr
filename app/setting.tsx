@@ -212,8 +212,6 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    backgroundColor: colors.darkGray,
-    color: colors.black,
     fontSize: 17,
   },
 });

@@ -204,7 +204,6 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    color: colors.white,
     fontSize: 30,
   },
 

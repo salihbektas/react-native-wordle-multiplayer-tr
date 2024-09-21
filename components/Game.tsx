@@ -342,13 +342,11 @@ const styles = StyleSheet.create({
   },
 
   letter: {
-    color: colors.white,
     fontWeight: '600',
     fontSize: 12,
   },
 
   letter2: {
-    color: colors.white,
     fontWeight: 'bold',
     fontSize: 30,
   },

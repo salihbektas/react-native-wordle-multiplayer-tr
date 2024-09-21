@@ -169,7 +169,6 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    color: colors.white,
     fontSize: 30,
   },
 
@@ -205,7 +204,6 @@ const styles = StyleSheet.create({
   },
 
   noServerText: {
-    color: colors.white,
     fontSize: 30,
     margin: 'auto',
   },
