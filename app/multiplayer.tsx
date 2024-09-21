@@ -28,6 +28,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import ButtonText from '@/components/ButtonText';
 import { words } from '@/constants/constants';
+import updatedWords from '../assets/updatedWords.json';
 import * as WebBrowser from 'expo-web-browser';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -251,12 +252,12 @@ export default function multiplayer() {
                   })}
           </View>
           <View style={styles.word}>
-            <Text style={styles.letter}>{words[wordIndex]}</Text>
+            <Text style={styles.letter}>{updatedWords[wordIndex]}</Text>
             <Pressable
               style={styles.linkContainer}
               onPress={() =>
                 WebBrowser.openBrowserAsync(
-                  `http://sozluk.gov.tr/?ara=${words[wordIndex].toLocaleLowerCase('tr')}`,
+                  `http://sozluk.gov.tr/?ara=${updatedWords[wordIndex].toLocaleLowerCase('tr')}`,
                 )
               }
             >

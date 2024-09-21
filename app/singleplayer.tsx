@@ -3,19 +3,21 @@ import { colors } from '@/constants/Colors';
 import Game from '@/components/Game';
 import { useState } from 'react';
 import { words, WORDSLENGTH } from '@/constants/constants';
+import updatedWords from '../assets/updatedWords.json';
 import { Ionicons } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
+import { update } from 'firebase/database';
 
 export default function App() {
   const [wordIndex, setWordIndex] = useState(
-    Math.floor(Math.random() * WORDSLENGTH),
+    Math.floor(Math.random() * updatedWords.length),
   );
   const [isPlaying, setIsPlaying] = useState(true);
   const [attempts, setAttempts] = useState(0);
   const [time, setTime] = useState(180);
 
   function onPressNext() {
-    setWordIndex(Math.floor(Math.random() * WORDSLENGTH));
+    setWordIndex(Math.floor(Math.random() * updatedWords.length));
     setIsPlaying(true);
     setTime(180);
   }
@@ -25,12 +27,12 @@ export default function App() {
       <Modal visible={!isPlaying} animationType='fade' transparent={true}>
         <View style={styles.modal}>
           <View style={styles.word}>
-            <Text style={styles.letter}>{words[wordIndex]}</Text>
+            <Text style={styles.letter}>{updatedWords[wordIndex]}</Text>
             <Pressable
               style={styles.linkContainer}
               onPress={() =>
                 WebBrowser.openBrowserAsync(
-                  `http://sozluk.gov.tr/?ara=${words[wordIndex].toLocaleLowerCase('tr')}`,
+                  `http://sozluk.gov.tr/?ara=${updatedWords[wordIndex].toLocaleLowerCase('tr')}`,
                 )
               }
             >

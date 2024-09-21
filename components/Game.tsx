@@ -16,6 +16,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { colors } from '@/constants/Colors';
 import { words } from '../constants/constants';
+import updatedWords from '../assets/updatedWords.json';
 import useInterval from 'use-interval';
 import Keyboard from './Keyboard';
 import ThemedText from './ThemedText';
@@ -87,7 +88,7 @@ export default function Game({
         setIsPlaying(false);
         Toast.show({
           type: 'error',
-          text1: `Kelime: ${words[answerIndex]}`,
+          text1: `Kelime: ${updatedWords[answerIndex]}`,
           autoHide: true,
           visibilityTime: 4000,
         });
@@ -126,10 +127,11 @@ export default function Game({
 
       for (let i = 0; i < 5; ++i) {
         if (
-          newState.data[newState.row].charAt(i) === words[answerIndex].charAt(i)
+          newState.data[newState.row].charAt(i) ===
+          updatedWords[answerIndex].charAt(i)
         ) {
           newState.colors[newState.row][i] = 'green';
-          green = [...green, words[answerIndex].charAt(i)];
+          green = [...green, updatedWords[answerIndex].charAt(i)];
         }
       }
 
@@ -139,7 +141,7 @@ export default function Game({
           for (let j = 0; j < 5; ++j) {
             if (
               newState.data[newState.row].charAt(i) ===
-                words[answerIndex].charAt(j) &&
+                updatedWords[answerIndex].charAt(j) &&
               newState.colors[newState.row][j] !== 'green' &&
               !yellowed[j]
             ) {
@@ -177,7 +179,7 @@ export default function Game({
         setIsPlaying(false);
         Toast.show({
           type: 'error',
-          text1: `Kelime: ${words[answerIndex]}`,
+          text1: `Kelime: ${updatedWords[answerIndex]}`,
           visibilityTime: 4000,
         });
       }

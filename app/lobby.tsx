@@ -21,7 +21,7 @@ import {
   View,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { WORDSLENGTH } from '../constants/constants';
+import updatedWords from '../assets/updatedWords.json';
 import { addWords } from '@/features/playerSlice/playerSlice';
 import ThemedText from '@/components/ThemedText';
 import ButtonText from '@/components/ButtonText';
@@ -54,7 +54,7 @@ export default function lobby() {
       let i = 0;
       const tempAnswerIndexes: number[] = [];
       do {
-        const answerIndexes = Math.floor(Math.random() * WORDSLENGTH);
+        const answerIndexes = Math.floor(Math.random() * updatedWords.length);
         if (
           !tempAnswerIndexes.some((answer) => {
             answer === answerIndexes;

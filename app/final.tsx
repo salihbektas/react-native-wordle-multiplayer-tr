@@ -14,6 +14,7 @@ import { child, off, onValue, remove } from 'firebase/database';
 import dbRootRef, { ServerType } from '@/utils/firebase';
 import { router, useFocusEffect } from 'expo-router';
 import { words } from '@/constants/constants';
+import updatedWords from '../assets/updatedWords.json';
 import ThemedText from '@/components/ThemedText';
 import ButtonText from '@/components/ButtonText';
 import * as WebBrowser from 'expo-web-browser';
@@ -35,12 +36,12 @@ export default function multiplayer() {
         style={styles.linkContainer}
         onPress={() =>
           WebBrowser.openBrowserAsync(
-            `http://sozluk.gov.tr/?ara=${words[answer].toLocaleLowerCase('tr')}`,
+            `http://sozluk.gov.tr/?ara=${updatedWords[answer].toLocaleLowerCase('tr')}`,
           )
         }
       >
         <ThemedText style={[styles.wordLetter, { marginRight: 14 }]}>
-          {words[answer]}
+          {updatedWords[answer]}
         </ThemedText>
         <Ionicons name='search-circle-outline' size={32} color={text} />
       </Pressable>
