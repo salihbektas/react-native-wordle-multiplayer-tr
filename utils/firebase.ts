@@ -11,6 +11,12 @@ export type ServerType = {
   points: Record<string, number>;
 };
 
+if (!process.env.EXPO_PUBLIC_API_URL) {
+  throw new Error(
+    'Missing database url. Please set db url in your .env.template',
+  );
+}
+
 const firebaseConfig = {
   databaseURL: process.env.EXPO_PUBLIC_API_URL,
 };
