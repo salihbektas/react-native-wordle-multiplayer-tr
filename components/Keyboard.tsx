@@ -1,4 +1,5 @@
 import { colors } from '@/constants/Colors';
+import { RootState } from '@/store/store';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { memo, useEffect } from 'react';
 import {
@@ -7,7 +8,9 @@ import {
   Text,
   View,
   TouchableOpacity,
+  useColorScheme,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 
 const letters = [
   ['E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'Ğ', 'Ü'],
@@ -32,6 +35,11 @@ export default memo(function Keyboard({
   yellowLetters,
   grayLetters,
 }: propType) {
+  const { keyboardLayout } = useSelector((state: RootState) => state.player);
+
+  const colorScheme = useColorScheme();
+  const { background } = colors[colorScheme ?? 'dark'];
+
   useEffect(() => {
     function keyDownHandler(e: KeyboardEvent) {
       e.preventDefault();
@@ -61,13 +69,24 @@ export default memo(function Keyboard({
   }, [onPressDel, onPressLetter, onPressDel]);
 
   return (
-    <View style={styles.keyboard}>
-      <View style={styles.keyboardRow}>
+    <View
+      style={keyboardLayout === 'flat' ? styles.flatKeyboard : styles.keyboard}
+    >
+      <View
+        style={
+          keyboardLayout === 'flat'
+            ? styles.flatKeyboardRow
+            : styles.keyboardRow
+        }
+      >
         {letters[0].map((item) => (
           <TouchableOpacity
             style={[
-              styles.letterBox,
+              keyboardLayout === 'flat'
+                ? styles.flatLetterBox
+                : styles.letterBox,
               {
+                borderColor: background,
                 backgroundColor: greenLetters.includes(item)
                   ? colors.green
                   : yellowLetters.includes(item)
@@ -86,12 +105,21 @@ export default memo(function Keyboard({
           </TouchableOpacity>
         ))}
       </View>
-      <View style={[styles.keyboardRow, { width: '93%' }]}>
+      <View
+        style={
+          keyboardLayout === 'flat'
+            ? styles.flatKeyboardRow
+            : [styles.keyboardRow, { width: '93%' }]
+        }
+      >
         {letters[1].map((item) => (
           <TouchableOpacity
             style={[
-              styles.letterBox,
+              keyboardLayout === 'flat'
+                ? styles.flatLetterBox
+                : styles.letterBox,
               {
+                borderColor: background,
                 backgroundColor: greenLetters.includes(item)
                   ? colors.green
                   : yellowLetters.includes(item)
@@ -110,12 +138,23 @@ export default memo(function Keyboard({
           </TouchableOpacity>
         ))}
       </View>
-      <View style={styles.keyboardRow}>
+      <View
+        style={
+          keyboardLayout === 'flat'
+            ? styles.flatKeyboardRow
+            : styles.keyboardRow
+        }
+      >
         {letters[2].map((item) => {
           if (item === 'ENTER')
             return (
               <TouchableOpacity
-                style={[styles.letterBox, { flex: 3 }]}
+                style={[
+                  keyboardLayout === 'flat'
+                    ? [styles.flatLetterBox, { borderColor: background }]
+                    : styles.letterBox,
+                  { flex: 3 },
+                ]}
                 onPress={onPressEnter}
                 key={item}
               >
@@ -125,7 +164,12 @@ export default memo(function Keyboard({
           if (item === 'DEL')
             return (
               <TouchableOpacity
-                style={[styles.letterBox, { flex: 3 }]}
+                style={[
+                  keyboardLayout === 'flat'
+                    ? [styles.flatLetterBox, { borderColor: background }]
+                    : styles.letterBox,
+                  { flex: 3 },
+                ]}
                 onPress={onPressDel}
                 key={item}
               >
@@ -136,8 +180,11 @@ export default memo(function Keyboard({
           return (
             <TouchableOpacity
               style={[
-                styles.letterBox,
+                keyboardLayout === 'flat'
+                  ? styles.flatLetterBox
+                  : styles.letterBox,
                 {
+                  borderColor: background,
                   backgroundColor: greenLetters.includes(item)
                     ? colors.green
                     : yellowLetters.includes(item)
@@ -194,5 +241,25 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: '600',
     fontSize: 12,
+  },
+
+  flatKeyboard: {
+    marginTop: 4,
+    width: '100%',
+    maxWidth: 500,
+    aspectRatio: 5 / 2,
+  },
+
+  flatKeyboardRow: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+
+  flatLetterBox: {
+    flex: 2,
+    backgroundColor: colors.lightGray,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: StyleSheet.hairlineWidth,
   },
 });

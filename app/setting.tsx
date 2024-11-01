@@ -27,7 +27,7 @@ export default function settings() {
   const [dark, setDark] = useState(colorScheme === 'dark');
   const { background, text } = colors[colorScheme ?? 'dark'];
   const inputRef = useRef<TextInput | null>(null);
-  const { playerName: storedPlayerName } = useSelector(
+  const { playerName: storedPlayerName, keyboardLayout } = useSelector(
     (state: RootState) => state.player,
   );
   const dispatch = useDispatch();
@@ -103,6 +103,21 @@ export default function settings() {
                 </View>
               </View>
             )}
+
+            <Pressable
+              style={styles.rowWrapper}
+              onPress={() => router.navigate('./keyboardSetting')}
+            >
+              <View style={styles.row}>
+                <ThemedText style={styles.rowLabel}>Klavye Düzeni</ThemedText>
+
+                <View style={styles.rowSpacer} />
+
+                <ThemedText style={styles.rowValue}>
+                  {keyboardLayout === 'seperate' ? 'Ayrık' : 'Düz'}
+                </ThemedText>
+              </View>
+            </Pressable>
           </View>
         </View>
       </ScrollView>

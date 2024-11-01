@@ -7,6 +7,7 @@ export interface PlayerState {
   dbRefName: string;
   answers: number[];
   numberOfGame: number;
+  keyboardLayout: 'seperate' | 'flat';
 }
 
 const initialState: PlayerState = {
@@ -15,6 +16,7 @@ const initialState: PlayerState = {
   dbRefName: '',
   answers: [],
   numberOfGame: 5,
+  keyboardLayout: 'seperate',
 };
 
 export const playerSlice = createSlice({
@@ -24,6 +26,13 @@ export const playerSlice = createSlice({
     addName: (state, action: PayloadAction<string>) => {
       state.playerName = action.payload;
       AsyncStorage.setItem('playerName', action.payload);
+    },
+    changeKeyboardLayout: (
+      state,
+      action: PayloadAction<'seperate' | 'flat'>,
+    ) => {
+      state.keyboardLayout = action.payload;
+      AsyncStorage.setItem('keyboardLayout', action.payload);
     },
     addDBRefName: (state, action: PayloadAction<string>) => {
       state.dbRefName = action.payload;
@@ -40,7 +49,13 @@ export const playerSlice = createSlice({
   },
 });
 
-export const { makeHost, makePlayer, addName, addDBRefName, addWords } =
-  playerSlice.actions;
+export const {
+  makeHost,
+  makePlayer,
+  addName,
+  addDBRefName,
+  addWords,
+  changeKeyboardLayout,
+} = playerSlice.actions;
 
 export default playerSlice.reducer;

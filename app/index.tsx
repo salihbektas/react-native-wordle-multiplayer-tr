@@ -6,7 +6,10 @@ import ButtonText from '@/components/ButtonText';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
-import { addName } from '@/features/playerSlice/playerSlice';
+import {
+  addName,
+  changeKeyboardLayout,
+} from '@/features/playerSlice/playerSlice';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -22,6 +25,10 @@ export default function RootLayout() {
         console.warn('PlayerName Load error', e);
       }
     })();
+
+    AsyncStorage.getItem('keyboardLayout').then((layout) => {
+      if (layout) dispatch(changeKeyboardLayout(layout as 'seperate' | 'flat'));
+    });
   }, []);
   return (
     <View style={[styles.main, { backgroundColor: background }]}>
